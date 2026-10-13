@@ -1,69 +1,162 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-export default function Home() {
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.io";
+
+export const metadata: Metadata = {
+  title: "Freelance Fee Calculator — Upwork, Fiverr & Global Take-Home Pay",
+  description:
+    "Clean, simple financial calculators for freelancers worldwide: see exact take-home pay after Upwork and Fiverr fees, convert USD to global currencies, and calculate tax withholding.",
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: "Freelance Fee Calculator — Upwork, Fiverr & Global Take-Home Pay",
+    description:
+      "Clean, simple financial calculators for freelancers: Upwork fees, Fiverr fees, multi-currency conversion, and tax calculations.",
+    url: SITE_URL,
+    type: "website",
+  },
+};
+
+const GLOBAL_TOOLS = [
+  {
+    href: "/upwork-fee-calculator",
+    title: "Upwork Fee Calculator",
+    description:
+      "Calculate take-home pay with configurable 0%–15% per-contract fee, bonus payments, and local currency conversion.",
+    cta: "Calculate Upwork fees",
+    id: "tool-card-upwork",
+  },
+  {
+    href: "/fiverr-fee-calculator",
+    title: "Fiverr Fee Calculator",
+    description:
+      "Calculate net earnings after Fiverr's standard 20% seller commission across base orders, extras, and buyer tips.",
+    cta: "Calculate Fiverr fees",
+    id: "tool-card-fiverr",
+  },
+  {
+    href: "/usd-to-pkr-calculator",
+    title: "Multi-Currency Converter",
+    description:
+      "Convert USD freelance payments to local currencies (PKR, INR, PHP, EUR, GBP, CAD, AUD, BDT, NGN) with custom exchange rates.",
+    cta: "Convert USD earnings",
+    id: "tool-card-usd-pkr",
+  },
+];
+
+const REGIONAL_TOOLS = [
+  {
+    href: "/pakistan-freelancer-tax",
+    title: "Pakistan Freelancer Tax Calculator",
+    region: "🇵🇰 Pakistan",
+    description:
+      "Calculate withholding tax on IT and export remittances under official FBR Section 154A rules for Tax Year 2027.",
+    cta: "Calculate Pakistan tax",
+    id: "tool-card-tax",
+  },
+];
+
+export default function HomePage() {
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "FreelanceCalc",
+    url: SITE_URL,
+    description:
+      "Global freelance fee and take-home pay calculators for Upwork, Fiverr, and multi-currency earnings.",
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+
+      {/* Header */}
+      <section className="mb-10">
+        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+          Global freelance fee calculators
+        </h1>
+        <p className="mt-1.5 text-sm text-stone-500 sm:text-base">
+          Accurate, transparent take-home pay calculations for freelancers worldwide on Upwork, Fiverr, and international clients.
+        </p>
+      </section>
+
+      {/* Universal Calculators */}
+      <section className="mb-10" aria-labelledby="universal-tools-heading">
+        <h2
+          id="universal-tools-heading"
+          className="mb-3 text-xs font-medium uppercase tracking-wider text-stone-400"
+        >
+          Universal Platform Calculators
+        </h2>
+        <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          {GLOBAL_TOOLS.map(({ href, title, description, cta, id }) => (
+            <Link
+              key={href}
+              href={href}
+              id={id}
+              className="group flex flex-col justify-between rounded-lg border border-stone-200 bg-white p-5 transition-colors hover:border-stone-300 hover:bg-stone-50/50"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <div>
+                <h3 className="text-base font-medium text-stone-900 group-hover:text-stone-700">
+                  {title}
+                </h3>
+                <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-stone-500">
+                  {description}
+                </p>
+              </div>
+              <p className="mt-4 text-xs font-medium text-stone-900 group-hover:text-[#385842] flex items-center gap-1">
+                <span>{cta}</span>
+                <span className="text-stone-400 transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Regional Taxes Section */}
+      <section aria-labelledby="regional-tools-heading">
+        <h2
+          id="regional-tools-heading"
+          className="mb-3 text-xs font-medium uppercase tracking-wider text-stone-400"
+        >
+          Regional Taxes & Withholding
+        </h2>
+        <div className="grid gap-3.5 sm:grid-cols-2">
+          {REGIONAL_TOOLS.map(({ href, title, region, description, cta, id }) => (
+            <Link
+              key={href}
+              href={href}
+              id={id}
+              className="group flex flex-col justify-between rounded-lg border border-stone-200 bg-white p-5 transition-colors hover:border-stone-300 hover:bg-stone-50/50"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-medium text-stone-900 group-hover:text-stone-700">
+                    {title}
+                  </h3>
+                  <span className="text-xs font-medium text-stone-500">
+                    {region}
+                  </span>
+                </div>
+                <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-stone-500">
+                  {description}
+                </p>
+              </div>
+              <p className="mt-4 text-xs font-medium text-stone-900 group-hover:text-[#385842] flex items-center gap-1">
+                <span>{cta}</span>
+                <span className="text-stone-400 transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
+              </p>
+            </Link>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
