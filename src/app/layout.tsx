@@ -6,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.io";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -4,7 +4,7 @@ import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.io";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.app";
 
 export const metadata: Metadata = {
   title: "Pakistan Freelancer Tax Calculator — FBR Section 154A Withholding Rates",
