@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import TaxCalculator from "@/components/calculators/TaxCalculator";
 import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
+import AffiliateTip from "@/components/ui/AffiliateTip";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.app";
@@ -106,6 +107,11 @@ export default function PakistanTaxPage() {
       {/* Main Calculator */}
       <div className="rounded-lg border border-stone-200 bg-white p-5 sm:p-7">
         <TaxCalculator />
+      </div>
+
+      {/* Helpful Resource / Affiliate Callout */}
+      <div className="mt-6">
+        <AffiliateTip platform="tax" />
       </div>
 
       {/* How it works */}
