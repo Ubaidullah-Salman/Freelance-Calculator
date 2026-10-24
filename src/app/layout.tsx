@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.app";
 
@@ -51,7 +56,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`min-h-screen bg-[#faf8f5] font-sans text-stone-900 antialiased flex flex-col ${inter.className}`}
+        className={`min-h-screen bg-[#faf8f5] font-sans text-stone-900 antialiased flex flex-col ${jakarta.variable} ${jakarta.className}`}
       >
         <Header />
         <div className="flex-1">{children}</div>

@@ -49,14 +49,19 @@ export default function UsdPkrPage() {
 
       {/* Header */}
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-800">
+            Multi-Currency • 9 Countries
+          </span>
+          <span className="text-xs text-stone-500 font-medium">
+            PKR, INR, PHP, EUR, GBP, CAD, AUD, BDT, NGN
+          </span>
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
           Freelance Currency Converter
         </h1>
-        <p className="mt-1.5 text-sm text-stone-600 sm:text-base">
-          Convert your USD client payments into local currencies (PKR, INR, PHP, EUR, GBP, CAD, AUD, BDT, NGN).
-        </p>
-        <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          Enter the specific conversion rate offered by your receiving bank, Wise, or Payoneer. All calculations run client-side in your browser with zero remote data storage.
+        <p className="mt-1.5 text-sm text-stone-600 sm:text-base leading-relaxed">
+          Convert your foreign USD earnings using your actual bank or payment provider transfer rate.
         </p>
       </header>
 

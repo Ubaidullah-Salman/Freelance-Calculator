@@ -87,14 +87,19 @@ export default function PakistanTaxPage() {
 
       {/* Header */}
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="rounded-md border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-800">
+            🇵🇰 Pakistan • FBR Section 154A
+          </span>
+          <span className="text-xs text-stone-500 font-medium">
+            Tax Year 2027 Official Withholding Rates
+          </span>
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
           Pakistan Freelancer Tax Calculator
         </h1>
-        <p className="mt-1.5 text-sm text-stone-600 sm:text-base">
-          Calculate export withholding tax under official FBR Rate Cards (Section 154A of the Income Tax Ordinance, 2001).
-        </p>
-        <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          Updated in accordance with the official FBR Withholding Tax Rate Card for Tax Year 2027 (Finance Act 2026). When foreign exchange remittances are realized through banking channels, your commercial bank deducts tax at source based on your income category, filer status, and PSEB registration.
+        <p className="mt-1.5 text-sm text-stone-600 sm:text-base leading-relaxed">
+          Calculate export withholding tax on foreign IT services and freelance remittances credited to Pakistani bank accounts.
         </p>
       </header>
 

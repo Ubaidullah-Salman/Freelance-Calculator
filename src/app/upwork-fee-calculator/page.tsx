@@ -54,14 +54,19 @@ export default function UpworkPage() {
 
       {/* Header */}
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-800">
+            Upwork • 2026 Rules
+          </span>
+          <span className="text-xs text-stone-500 font-medium">
+            0% to 15% per contract (10% standard)
+          </span>
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
           Upwork Fee Calculator
         </h1>
-        <p className="mt-1.5 text-sm text-stone-600 sm:text-base">
-          Calculate your take-home pay under Upwork&apos;s current per-contract fee model (0% to 15%).
-        </p>
-        <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          Upwork charges a service fee between 0% and 15% depending on contract type and terms. The exact rate is shown when submitting a proposal or receiving an offer, and locks once the contract begins.
+        <p className="mt-1.5 text-sm text-stone-600 sm:text-base leading-relaxed">
+          Calculate your exact take-home payout after Upwork platform fees, contract bonuses, and local currency conversion.
         </p>
       </header>
 

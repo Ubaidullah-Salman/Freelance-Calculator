@@ -54,14 +54,19 @@ export default function FiverrPage() {
 
       {/* Header */}
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="rounded-md border border-green-200 bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-800">
+            Fiverr • 20% Standard
+          </span>
+          <span className="text-xs text-stone-500 font-medium">
+            Applies to base orders, gig extras & tips
+          </span>
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
           Fiverr Fee Calculator
         </h1>
-        <p className="mt-1.5 text-sm text-stone-600 sm:text-base">
-          See how much you&apos;ll keep after Fiverr&apos;s standard 20% seller commission and withdrawal costs.
-        </p>
-        <p className="mt-3 text-xs leading-relaxed text-stone-500">
-          According to Fiverr&apos;s official Help Center, sellers receive 80% of completed order proceeds. The standard 20% platform commission applies uniformly to base gigs, custom offers, gig extras, and buyer tips.
+        <p className="mt-1.5 text-sm text-stone-600 sm:text-base leading-relaxed">
+          See your exact net revenue after Fiverr&apos;s 20% platform commission and payment withdrawal fees.
         </p>
       </header>
 
