@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   description:
     "Free, transparent financial calculators for freelancers worldwide: calculate exact take-home pay after Upwork and Fiverr fees, convert USD to global currencies, and view tax rules.",
   robots: { index: true, follow: true },
+  other: {
+    "google-adsense-account": "ca-pub-2344318084516150",
+  },
   openGraph: {
     siteName: "FreelanceCalc",
     type: "website",
@@ -41,11 +44,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2344318084516150"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+        />
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-2344318084516150"
         />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-0L07XBD601"
