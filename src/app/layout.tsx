@@ -12,7 +12,7 @@ const jakarta = Plus_Jakarta_Sans({
   variable: "--font-sans",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

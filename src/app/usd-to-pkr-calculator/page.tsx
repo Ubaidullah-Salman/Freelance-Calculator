@@ -5,7 +5,7 @@ import FaqSection from "@/components/ui/FaqSection";
 import AffiliateTip from "@/components/ui/AffiliateTip";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://freelancecalc.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
   title: "USD Freelance Currency Converter — PKR, INR, PHP, EUR, GBP",
