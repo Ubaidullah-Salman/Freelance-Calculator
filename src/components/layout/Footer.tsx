@@ -16,6 +16,7 @@ const GUIDE_LINKS = [
 
 const LEGAL_LINKS = [
   { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms", label: "Terms of Service" },
 ];
