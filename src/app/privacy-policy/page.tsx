@@ -30,7 +30,7 @@ export default function PrivacyPolicyPage() {
       <div className="space-y-6 text-sm leading-relaxed text-stone-700">
         <section>
           <p>
-            At <strong>FreelanceCalc</strong> (accessible from <a href="https://freelancecalc.app" className="text-emerald-700 underline">https://freelancecalc.app</a>), the privacy of our visitors is of paramount importance to us. This Privacy Policy document outlines the types of information that is collected and recorded by FreelanceCalc and how we use it.
+            At <strong>FreelanceCalc</strong> (accessible from <a href="https://www.freelancecalc.app" className="text-emerald-700 underline">https://www.freelancecalc.app</a>), the privacy of our visitors is of paramount importance to us. This Privacy Policy document outlines the types of information that is collected and recorded by FreelanceCalc and how we use it.
           </p>
         </section>
 

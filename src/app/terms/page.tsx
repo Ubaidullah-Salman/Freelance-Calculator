@@ -30,7 +30,7 @@ export default function TermsPage() {
       <div className="space-y-6 text-sm leading-relaxed text-stone-700">
         <section>
           <p>
-            By accessing or using <strong>FreelanceCalc</strong> (<a href="https://freelancecalc.app" className="text-emerald-700 underline">freelancecalc.app</a>), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, please do not use our website or calculators.
+            By accessing or using <strong>FreelanceCalc</strong> (<a href="https://www.freelancecalc.app" className="text-emerald-700 underline">freelancecalc.app</a>), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, please do not use our website or calculators.
           </p>
         </section>
 

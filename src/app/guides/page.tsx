@@ -35,6 +35,14 @@ const GUIDES = [
     desc: "Why your USD earnings shrink by 3–7% during conversion — and how freelancers in Pakistan, India, and Bangladesh can keep more of their money.",
     readTime: "8 min read",
   },
+  {
+    href: "/pakistan-freelancer-tax",
+    badge: "Tax",
+    badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
+    title: "Pakistan Freelancer Tax: FBR Section 154A Withholding Guide",
+    desc: "Complete guide on 0.25% PSEB tax, 1% standard export withholding, and FBR Active Taxpayer List rules for IT freelancers.",
+    readTime: "5 min read",
+  },
 ];
 
 export default function GuidesIndex() {

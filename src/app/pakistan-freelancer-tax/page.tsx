@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import TaxCalculator from "@/components/calculators/TaxCalculator";
 import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
@@ -223,6 +224,26 @@ export default function PakistanTaxPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* In-depth Guide Callout Banner */}
+        <div className="mt-6 rounded-xl border border-teal-200 bg-teal-50/70 p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold text-teal-950">
+                How do forex spreads and bank fees affect your net payout?
+              </p>
+              <p className="mt-0.5 text-xs text-teal-800">
+                Beyond FBR tax withholding, foreign exchange spreads reduce USD remittances by 3%–7%.
+              </p>
+            </div>
+            <Link
+              href="/guides/freelancer-currency-conversion"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-teal-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-teal-800 transition-colors shrink-0"
+            >
+              Read Currency Guide →
+            </Link>
+          </div>
         </div>
       </section>
 
