@@ -83,6 +83,33 @@ const TAX_TOOLS = [
   },
 ];
 
+const FEATURED_GUIDES = [
+  {
+    href: "/guides/upwork-fees-explained",
+    badge: "Upwork Guide",
+    badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    title: "How Much Does Upwork Take? Complete Fee Guide (2026)",
+    desc: "A detailed breakdown of Upwork's 0%–15% service fee, Direct Contracts (0%), bonuses, and worked payout examples.",
+    readTime: "7 min read",
+  },
+  {
+    href: "/guides/fiverr-fees-explained",
+    badge: "Fiverr Guide",
+    badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+    title: "Fiverr Fees Explained: What Fiverr Takes from Earnings",
+    desc: "Fiverr charges a flat 20% on all earnings including gig extras and tips. Learn formulas to reverse-calculate your pricing.",
+    readTime: "6 min read",
+  },
+  {
+    href: "/guides/freelancer-currency-conversion",
+    badge: "Currency Guide",
+    badgeColor: "bg-amber-50 text-amber-800 border-amber-200",
+    title: "Currency Conversion: Why You Get Less Than Google Rates",
+    desc: "Why USD earnings shrink 3%–7% during bank conversion and how freelancers keep more of their international payments.",
+    readTime: "8 min read",
+  },
+];
+
 export default function HomePage() {
   const websiteSchema = {
     "@context": "https://schema.org",
@@ -246,6 +273,55 @@ export default function HomePage() {
                 <span className="inline-flex items-center gap-1.5 rounded-lg bg-stone-50 px-4 py-2.5 text-xs font-semibold text-stone-900 group-hover:bg-stone-900 group-hover:text-white transition-all">
                   <span>{tool.cta}</span>
                   <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Guides Section */}
+      <section className="mb-12" aria-labelledby="featured-guides-heading">
+        <div className="mb-4 flex items-center justify-between border-b border-stone-200/80 pb-2.5">
+          <h2
+            id="featured-guides-heading"
+            className="text-sm font-semibold uppercase tracking-wider text-stone-600"
+          >
+            In-Depth Freelancer Guides
+          </h2>
+          <Link
+            href="/guides"
+            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 transition-colors"
+          >
+            View all guides →
+          </Link>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          {FEATURED_GUIDES.map((guide) => (
+            <Link
+              key={guide.href}
+              href={guide.href}
+              className="group flex flex-col justify-between rounded-xl border border-stone-200/90 bg-white p-4.5 shadow-xs transition-all hover:border-stone-400 hover:shadow-md"
+            >
+              <div>
+                <span
+                  className={`inline-block rounded-md border px-2 py-0.5 text-[10px] font-semibold mb-2.5 ${guide.badgeColor}`}
+                >
+                  {guide.badge}
+                </span>
+                <h3 className="text-sm font-semibold text-stone-900 group-hover:text-emerald-800 transition-colors leading-snug">
+                  {guide.title}
+                </h3>
+                <p className="mt-2 text-xs text-stone-600 leading-relaxed">
+                  {guide.desc}
+                </p>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-3 text-[11px] text-stone-500">
+                <span>{guide.readTime}</span>
+                <span className="font-semibold text-stone-900 group-hover:text-emerald-700 transition-colors flex items-center gap-1">
+                  Read Guide <span>→</span>
                 </span>
               </div>
             </Link>

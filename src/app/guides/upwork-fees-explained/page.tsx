@@ -18,8 +18,110 @@ export const metadata: Metadata = {
 };
 
 export default function UpworkFeesGuide() {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "How Much Does Upwork Take? Complete Fee Guide 2026",
+    description:
+      "Detailed breakdown of Upwork's current 0%–15% service fee structure. Learn exactly how Upwork fees are calculated, which contract types pay 0%, and how to maximize your take-home pay.",
+    url: `${SITE_URL}/guides/upwork-fees-explained`,
+    datePublished: "2026-10-31T00:00:00Z",
+    dateModified: "2026-11-08T00:00:00Z",
+    author: {
+      "@type": "Organization",
+      name: "FreelanceCalc",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "FreelanceCalc",
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/guides/upwork-fees-explained`,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: `${SITE_URL}/guides`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Upwork Fees Explained",
+        item: `${SITE_URL}/guides/upwork-fees-explained`,
+      },
+    ],
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Can my Upwork fee change after a contract starts?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "No. Once a contract is active, the service fee rate is locked for that specific contract. It cannot be changed by either you or the client after the contract has started.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is the Upwork service fee charged to me or to the client?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The service fee is charged to the freelancer and is deducted from your earnings. The client pays a separate Upwork service fee on their side, which does not affect your payout.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What happens to the fee rate if I earn more on a contract?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Under the current model, earning more on a contract does not change your fee rate. The rate set at the start applies to all earnings on that contract regardless of the total billed amount.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Does Upwork charge fees on hourly contracts differently?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "No. The same service fee percentage applies to both hourly and fixed-price contract types. The only difference is that hourly billing is based on tracked hours approved through Upwork's weekly billing cycle.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="mb-6 text-xs text-stone-500">
         <Link href="/" className="hover:text-stone-900">Home</Link>

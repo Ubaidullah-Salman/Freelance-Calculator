@@ -18,8 +18,110 @@ export const metadata: Metadata = {
 };
 
 export default function CurrencyConversionGuide() {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Freelancer Currency Conversion Guide: USD to PKR, INR & More (2026)",
+    description:
+      "Why Google's exchange rate differs from what hits your bank account. A complete guide to currency conversion for freelancers on Upwork, Fiverr, and Payoneer — with real examples for Pakistan, India, and Bangladesh.",
+    url: `${SITE_URL}/guides/freelancer-currency-conversion`,
+    datePublished: "2026-10-31T00:00:00Z",
+    dateModified: "2026-11-08T00:00:00Z",
+    author: {
+      "@type": "Organization",
+      name: "FreelanceCalc",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "FreelanceCalc",
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/guides/freelancer-currency-conversion`,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: `${SITE_URL}/guides`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Freelancer Currency Conversion",
+        item: `${SITE_URL}/guides/freelancer-currency-conversion`,
+      },
+    ],
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Why does my bank deposit amount not match my Upwork balance?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Multiple deductions happen between your Upwork balance and your bank deposit: Upwork's platform fee, wire transfer fees, your bank's currency conversion spread, and any incoming wire processing fee.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is the exchange rate I see on Google reliable for planning?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "It is useful as a reference benchmark but never the rate you will actually receive. For financial planning, use a rate that is 4–6% below the current Google rate as your conservative estimate for what will land in a local bank account.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Should I use Payoneer or Wise?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Both are excellent for freelancers. Payoneer integrates directly with Upwork and Fiverr. Wise typically offers the closest rates to mid-market and is excellent for final conversion to local currency.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Does Upwork's withdrawal method affect my exchange rate?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes significantly. Withdrawing to a Payoneer USD account keeps your money in USD with no conversion. Withdrawing directly to a local bank means conversion happens at the bank's rate.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="mb-6 text-xs text-stone-500">
         <Link href="/" className="hover:text-stone-900">Home</Link>

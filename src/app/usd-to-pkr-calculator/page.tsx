@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import UsdPkrCalculator from "@/components/calculators/UsdPkrCalculator";
 import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
@@ -110,6 +111,26 @@ export default function UsdPkrPage() {
           <p className="text-xs text-stone-500">
             Exchange rates fluctuate continually. Enter your provider&apos;s settlement rate for exact take-home projections.
           </p>
+
+          {/* In-depth Guide Callout Banner */}
+          <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold text-amber-950">
+                  Why do you get less than Google&apos;s exchange rate?
+                </p>
+                <p className="mt-0.5 text-xs text-amber-800">
+                  Understand mid-market vs. bank buying rates, forex spreads (3%–7%), and how to keep more of your earnings.
+                </p>
+              </div>
+              <Link
+                href="/guides/freelancer-currency-conversion"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-amber-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-amber-800 transition-colors shrink-0"
+              >
+                Read Currency Guide →
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

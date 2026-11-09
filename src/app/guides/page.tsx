@@ -38,8 +38,50 @@ const GUIDES = [
 ];
 
 export default function GuidesIndex() {
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Freelancer Guides — Fees, Tax & Currency Explained",
+    description:
+      "Free, detailed guides for freelancers on Upwork fees, Fiverr commissions, currency conversion, and Pakistan tax.",
+    url: `${SITE_URL}/guides`,
+    hasPart: GUIDES.map((g) => ({
+      "@type": "Article",
+      name: g.title,
+      description: g.desc,
+      url: `${SITE_URL}${g.href}`,
+    })),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: `${SITE_URL}/guides`,
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <nav className="mb-6 text-xs text-stone-500">
         <Link href="/" className="hover:text-stone-900">Home</Link>
         <span className="mx-2">›</span>

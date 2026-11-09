@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import UpworkCalculator from "@/components/calculators/UpworkCalculator";
 import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
@@ -124,6 +125,26 @@ export default function UpworkPage() {
             </a>
             . Always review the locked fee displayed on your active proposal or offer before submitting work.
           </p>
+
+          {/* In-depth Guide Callout Banner */}
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold text-emerald-950">
+                  Want to learn how to reduce your Upwork fees?
+                </p>
+                <p className="mt-0.5 text-xs text-emerald-800">
+                  Read our full guide on Direct Contracts (0% fee), bonus fees, and how Upwork fees are calculated in 2026.
+                </p>
+              </div>
+              <Link
+                href="/guides/upwork-fees-explained"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-emerald-800 transition-colors shrink-0"
+              >
+                Read Upwork Guide →
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -7,6 +7,13 @@ const TOOL_LINKS = [
   { href: "/pakistan-freelancer-tax", label: "Pakistan Tax" },
 ];
 
+const GUIDE_LINKS = [
+  { href: "/guides", label: "All Guides" },
+  { href: "/guides/upwork-fees-explained", label: "Upwork Fee Guide" },
+  { href: "/guides/fiverr-fees-explained", label: "Fiverr Fees Explained" },
+  { href: "/guides/freelancer-currency-conversion", label: "Currency Conversion" },
+];
+
 const LEGAL_LINKS = [
   { href: "/about", label: "About Us" },
   { href: "/privacy-policy", label: "Privacy Policy" },
@@ -38,6 +45,24 @@ export default function Footer() {
               </p>
               <ul className="space-y-1.5" role="list">
                 {TOOL_LINKS.map(({ href, label }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className="text-stone-600 transition-colors hover:text-stone-950"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-semibold text-stone-900 text-[11px] uppercase tracking-wider mb-2.5">
+                Guides
+              </p>
+              <ul className="space-y-1.5" role="list">
+                {GUIDE_LINKS.map(({ href, label }) => (
                   <li key={href}>
                     <Link
                       href={href}

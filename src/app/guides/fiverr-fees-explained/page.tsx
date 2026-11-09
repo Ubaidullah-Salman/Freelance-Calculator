@@ -18,8 +18,110 @@ export const metadata: Metadata = {
 };
 
 export default function FiverrFeesGuide() {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Fiverr Fees Explained: What Does Fiverr Take in 2026?",
+    description:
+      "Complete breakdown of Fiverr's 20% seller commission — on base orders, extras, tips, and custom offers. Learn what you actually keep and how to calculate your real take-home pay on Fiverr.",
+    url: `${SITE_URL}/guides/fiverr-fees-explained`,
+    datePublished: "2026-10-31T00:00:00Z",
+    dateModified: "2026-11-08T00:00:00Z",
+    author: {
+      "@type": "Organization",
+      name: "FreelanceCalc",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "FreelanceCalc",
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/guides/fiverr-fees-explained`,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Guides",
+        item: `${SITE_URL}/guides`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Fiverr Fees Explained",
+        item: `${SITE_URL}/guides/fiverr-fees-explained`,
+      },
+    ],
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Does Fiverr take 20% from tips?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes. Tips are treated the same as regular earnings on Fiverr. If a buyer sends you a $50 tip, Fiverr deducts $10 (20%), and $40 is credited to your account.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Is there a way to reduce the 20% Fiverr fee?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "No. Fiverr does not offer a lower fee tier for any seller level, volume, or tenure. The 20% rate is fixed for all sellers on the standard platform. Fiverr Pro sellers also pay 20%.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "When does the 20% get deducted — at order or at withdrawal?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The fee is deducted at the time the order is placed. Your seller balance already reflects the net amount (after 20% deduction).",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Does Fiverr charge withdrawal fees?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Fiverr may charge withdrawal fees depending on your payment method. PayPal withdrawals are generally free, while bank transfers and other methods may have flat fees or minimum withdrawal amounts.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="mb-6 text-xs text-stone-500">
         <Link href="/" className="hover:text-stone-900">Home</Link>

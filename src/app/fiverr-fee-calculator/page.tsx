@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import FiverrCalculator from "@/components/calculators/FiverrCalculator";
 import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
@@ -143,6 +144,26 @@ export default function FiverrPage() {
             </a>
             .
           </p>
+
+          {/* In-depth Guide Callout Banner */}
+          <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold text-blue-950">
+                  Want the full breakdown on Fiverr seller fees?
+                </p>
+                <p className="mt-0.5 text-xs text-blue-800">
+                  Read how the 20% commission affects base gigs, package extras, tips, and pricing formulas.
+                </p>
+              </div>
+              <Link
+                href="/guides/fiverr-fees-explained"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-blue-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-blue-800 transition-colors shrink-0"
+              >
+                Read Fiverr Guide →
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

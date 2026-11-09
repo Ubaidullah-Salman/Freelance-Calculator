@@ -3,79 +3,81 @@ import type { MetadataRoute } from "next";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const contentUpdated = new Date("2026-11-08T00:00:00Z");
+  const legalUpdated = new Date("2026-10-24T00:00:00Z");
+
   return [
     {
       url: SITE_URL,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 1,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 1.0,
     },
     {
       url: `${SITE_URL}/upwork-fee-calculator`,
-      lastModified: now,
-      changeFrequency: "monthly",
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/fiverr-fee-calculator`,
-      lastModified: now,
-      changeFrequency: "monthly",
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/usd-to-pkr-calculator`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${SITE_URL}/pakistan-freelancer-tax`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/guides`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/guides/upwork-fees-explained`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/guides/fiverr-fees-explained`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/guides/freelancer-currency-conversion`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
     {
       url: `${SITE_URL}/about`,
-      lastModified: now,
+      lastModified: legalUpdated,
       changeFrequency: "monthly",
-      priority: 0.5,
+      priority: 0.4,
     },
     {
       url: `${SITE_URL}/privacy-policy`,
-      lastModified: now,
+      lastModified: legalUpdated,
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${SITE_URL}/terms`,
-      lastModified: now,
+      lastModified: legalUpdated,
       changeFrequency: "yearly",
       priority: 0.3,
-    },
-    {
-      url: `${SITE_URL}/guides`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/guides/upwork-fees-explained`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${SITE_URL}/guides/fiverr-fees-explained`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${SITE_URL}/guides/freelancer-currency-conversion`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
     },
   ];
 }
