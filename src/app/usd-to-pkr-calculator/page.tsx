@@ -9,12 +9,12 @@ import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "USD Freelance Currency Converter — PKR, INR, PHP, EUR, GBP",
+  title: "Freelance Currency Converter — Real Bank Rates (USD to PKR, INR, PHP)",
   description:
-    "Convert your USD freelance earnings to Pakistani Rupees, Indian Rupees, Philippine Pesos, Euros, and British Pounds with custom bank exchange rates.",
+    "Convert USD freelance earnings to PKR, INR, PHP, and EUR using your actual bank buying rates, not misleading mid-market rates. Includes weekly and annual projections.",
   alternates: { canonical: `${SITE_URL}/usd-to-pkr-calculator` },
   openGraph: {
-    title: "USD Freelance Currency Converter — Multi-Currency Take-Home Pay",
+    title: "Freelance Currency Converter — Real Bank Rates (USD to PKR, INR, PHP)",
     description:
       "Convert USD freelance income to local currencies with monthly and annual projections.",
     url: `${SITE_URL}/usd-to-pkr-calculator`,

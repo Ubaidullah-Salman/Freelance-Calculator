@@ -9,14 +9,14 @@ import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Fiverr Fee Calculator — Calculate Your Net Take-Home Pay",
+  title: "Fiverr Fee Calculator (2026) — 20% Seller Cut & Take-Home Pay",
   description:
-    "See how much you'll keep after Fiverr's standard 20% seller service fee and withdrawal costs. Calculate net earnings across base orders, extras, and tips.",
+    "Calculate exact net earnings after Fiverr's flat 20% commission on orders, extras, and tips. Includes reverse pricing formulas and payout withdrawal fees.",
   alternates: { canonical: `${SITE_URL}/fiverr-fee-calculator` },
   openGraph: {
-    title: "Fiverr Fee Calculator — Calculate Your Net Take-Home Pay",
+    title: "Fiverr Fee Calculator (2026) — 20% Seller Cut & Take-Home Pay",
     description:
-      "See how much you'll keep after Fiverr's standard 20% seller service fee and withdrawal costs.",
+      "Calculate exact net earnings after Fiverr's flat 20% commission on gigs, extras, and tips.",
     url: `${SITE_URL}/fiverr-fee-calculator`,
     type: "website",
   },
@@ -111,6 +111,46 @@ export default function FiverrPage() {
             </ul>
             <p className="mt-2.5 font-mono text-[11px] text-stone-500">
               Seller Payout = (Base Order + Extras + Tips) × 80% − Withdrawal Fee
+            </p>
+          </div>
+
+          {/* Quick Fee Reference Table */}
+          <div className="rounded-xl border border-stone-200 bg-white p-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700 mb-2.5">
+              Fiverr 20% Earnings Breakdown Table
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="border-b border-stone-200 bg-stone-50/70 text-stone-700">
+                    <th className="py-2 px-2.5 font-semibold">Order / Tip Amount</th>
+                    <th className="py-2 px-2.5 font-semibold">Fiverr Cut (20%)</th>
+                    <th className="py-2 px-2.5 font-semibold">Seller Keeps (80%)</th>
+                    <th className="py-2 px-2.5 font-semibold">Buyer Pays (~5.5%)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100 text-stone-600">
+                  {[
+                    ["$10.00", "−$2.00", "$8.00", "$12.50"],
+                    ["$25.00", "−$5.00", "$20.00", "$27.50"],
+                    ["$50.00", "−$10.00", "$40.00", "$52.50"],
+                    ["$100.00", "−$20.00", "$80.00", "$105.50"],
+                    ["$250.00", "−$50.00", "$200.00", "$263.75"],
+                    ["$500.00", "−$100.00", "$400.00", "$527.50"],
+                    ["$1,000.00", "−$200.00", "$800.00", "$1,055.00"],
+                  ].map(([order, cut, keep, buyer], i) => (
+                    <tr key={i} className="hover:bg-stone-50/50">
+                      <td className="py-2 px-2.5 font-medium text-stone-900">{order}</td>
+                      <td className="py-2 px-2.5 text-rose-600 font-medium">{cut}</td>
+                      <td className="py-2 px-2.5 text-emerald-700 font-bold">{keep}</td>
+                      <td className="py-2 px-2.5 text-stone-500">{buyer}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2.5 text-[11px] text-stone-500">
+              💡 <strong>Reverse Pricing Tip:</strong> To take home a specific dollar amount, divide by 0.80. For example, to net $200, charge $200 ÷ 0.80 = <strong>$250</strong>.
             </p>
           </div>
 

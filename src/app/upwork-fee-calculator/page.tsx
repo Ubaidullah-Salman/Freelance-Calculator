@@ -9,14 +9,14 @@ import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Upwork Fee Calculator — Calculate Your Net Take-Home Pay",
+  title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home (0%–15%)",
   description:
-    "Calculate take-home pay under Upwork's current 0% to 15% per-contract fee model. Includes bonus payments, withdrawal methods, and local currency payouts.",
+    "Calculate your exact Upwork take-home pay under current 0%–15% contract rules. Includes standard 10% rate, 0% Direct Contracts, client bonuses, and real bank payouts.",
   alternates: { canonical: `${SITE_URL}/upwork-fee-calculator` },
   openGraph: {
-    title: "Upwork Fee Calculator — Calculate Your Net Take-Home Pay",
+    title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home (0%–15%)",
     description:
-      "Calculate take-home pay under Upwork's current 0% to 15% per-contract fee model.",
+      "Calculate your exact Upwork take-home pay under current 0%–15% contract rules. Includes standard 10% rate, 0% Direct Contracts, and bonus support.",
     url: `${SITE_URL}/upwork-fee-calculator`,
     type: "website",
   },
@@ -111,6 +111,43 @@ export default function UpworkPage() {
             <p className="mt-2.5 font-mono text-[11px] text-stone-500">
               Formula: Net Take-Home = (Project Amount + Bonus) × (1 − Fee Rate)
             </p>
+          </div>
+
+          {/* Quick Fee Reference Table */}
+          <div className="rounded-xl border border-stone-200 bg-white p-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700 mb-2.5">
+              Quick Upwork Fee Breakdown Table (10% vs 0% BYO)
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="border-b border-stone-200 bg-stone-50/70 text-stone-700">
+                    <th className="py-2 px-2.5 font-semibold">Gross Billed</th>
+                    <th className="py-2 px-2.5 font-semibold">Standard Fee (10%)</th>
+                    <th className="py-2 px-2.5 font-semibold">You Keep (10%)</th>
+                    <th className="py-2 px-2.5 font-semibold">Direct Contract (0%)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100 text-stone-600">
+                  {[
+                    ["$50", "−$5.00", "$45.00", "$50.00"],
+                    ["$100", "−$10.00", "$90.00", "$100.00"],
+                    ["$250", "−$25.00", "$225.00", "$250.00"],
+                    ["$500", "−$50.00", "$450.00", "$500.00"],
+                    ["$1,000", "−$100.00", "$900.00", "$1,000.00"],
+                    ["$2,500", "−$250.00", "$2,250.00", "$2,500.00"],
+                    ["$5,000", "−$500.00", "$4,500.00", "$5,000.00"],
+                  ].map(([gross, fee, keep, direct], i) => (
+                    <tr key={i} className="hover:bg-stone-50/50">
+                      <td className="py-2 px-2.5 font-medium text-stone-900">{gross}</td>
+                      <td className="py-2 px-2.5 text-rose-600 font-medium">{fee}</td>
+                      <td className="py-2 px-2.5 text-emerald-700 font-bold">{keep}</td>
+                      <td className="py-2 px-2.5 text-stone-800">{direct}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <p className="text-xs text-stone-500">
