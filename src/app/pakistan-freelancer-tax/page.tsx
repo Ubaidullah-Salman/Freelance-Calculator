@@ -9,14 +9,20 @@ import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Pakistan Freelancer Tax Calculator (2026/2027) — FBR 154A Rates",
+  title: "Pakistan Freelancer Tax Calculator (2026) — FBR 154A",
   description:
-    "Calculate exact FBR Section 154A withholding tax on IT & freelance export remittances: 0.25% PSEB registered rate vs 1% non-registered. Updated for Finance Act 2026.",
-  alternates: { canonical: `${SITE_URL}/pakistan-freelancer-tax` },
+    "Calculate FBR Section 154A withholding tax on IT freelance export income: 0.25% PSEB rate vs 1% non-registered for FY 2026.",
+  alternates: {
+    canonical: `${SITE_URL}/pakistan-freelancer-tax`,
+    languages: {
+      en: `${SITE_URL}/pakistan-freelancer-tax`,
+      "x-default": `${SITE_URL}/pakistan-freelancer-tax`,
+    },
+  },
   openGraph: {
-    title: "Pakistan Freelancer Tax Calculator (2026/2027) — FBR 154A Rates",
+    title: "Pakistan Freelancer Tax Calculator (2026) — FBR 154A",
     description:
-      "Calculate withholding tax on IT and export remittances under FBR Tax Year 2027 / Finance Act 2026 rules.",
+      "Calculate FBR Section 154A withholding tax on IT freelance export income: 0.25% PSEB rate vs 1% non-registered for FY 2026.",
     url: `${SITE_URL}/pakistan-freelancer-tax`,
     type: "website",
   },

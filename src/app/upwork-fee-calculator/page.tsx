@@ -9,14 +9,20 @@ import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home (0%–15%)",
+  title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home",
   description:
-    "Calculate your exact Upwork take-home pay under current 0%–15% contract rules. Includes standard 10% rate, 0% Direct Contracts, client bonuses, and real bank payouts.",
-  alternates: { canonical: `${SITE_URL}/upwork-fee-calculator` },
+    "Calculate your Upwork take-home pay under 0%–15% fee tiers. Covers 10% standard rate, 0% Direct Contracts, and real bank payouts.",
+  alternates: {
+    canonical: `${SITE_URL}/upwork-fee-calculator`,
+    languages: {
+      en: `${SITE_URL}/upwork-fee-calculator`,
+      "x-default": `${SITE_URL}/upwork-fee-calculator`,
+    },
+  },
   openGraph: {
-    title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home (0%–15%)",
+    title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home",
     description:
-      "Calculate your exact Upwork take-home pay under current 0%–15% contract rules. Includes standard 10% rate, 0% Direct Contracts, and bonus support.",
+      "Calculate your Upwork take-home pay under 0%–15% fee tiers. Covers 10% standard rate, 0% Direct Contracts, and real bank payouts.",
     url: `${SITE_URL}/upwork-fee-calculator`,
     type: "website",
   },

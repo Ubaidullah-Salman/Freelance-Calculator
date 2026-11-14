@@ -9,14 +9,20 @@ import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Fiverr Fee Calculator (2026) — 20% Seller Cut & Take-Home Pay",
+  title: "Fiverr Fee Calculator (2026) — 20% Fee & Take-Home Pay",
   description:
-    "Calculate exact net earnings after Fiverr's flat 20% commission on orders, extras, and tips. Includes reverse pricing formulas and payout withdrawal fees.",
-  alternates: { canonical: `${SITE_URL}/fiverr-fee-calculator` },
+    "Calculate net earnings after Fiverr's 20% cut on orders, extras, and tips. Includes reverse pricing formulas and payout fees.",
+  alternates: {
+    canonical: `${SITE_URL}/fiverr-fee-calculator`,
+    languages: {
+      en: `${SITE_URL}/fiverr-fee-calculator`,
+      "x-default": `${SITE_URL}/fiverr-fee-calculator`,
+    },
+  },
   openGraph: {
-    title: "Fiverr Fee Calculator (2026) — 20% Seller Cut & Take-Home Pay",
+    title: "Fiverr Fee Calculator (2026) — 20% Fee & Take-Home Pay",
     description:
-      "Calculate exact net earnings after Fiverr's flat 20% commission on gigs, extras, and tips.",
+      "Calculate net earnings after Fiverr's 20% cut on orders, extras, and tips. Includes reverse pricing formulas and payout fees.",
     url: `${SITE_URL}/fiverr-fee-calculator`,
     type: "website",
   },

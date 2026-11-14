@@ -4,10 +4,16 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — FreelanceCalc",
+  title: "Privacy Policy & Data Protection — FreelanceCalc",
   description:
-    "Privacy Policy for FreelanceCalc. Learn how we handle your data, our client-side calculations guarantee, and our cookie and advertising disclosures.",
-  alternates: { canonical: `${SITE_URL}/privacy-policy` },
+    "Privacy policy for FreelanceCalc. Learn about our client-side privacy guarantee, data protection, and cookie disclosures.",
+  alternates: {
+    canonical: `${SITE_URL}/privacy-policy`,
+    languages: {
+      en: `${SITE_URL}/privacy-policy`,
+      "x-default": `${SITE_URL}/privacy-policy`,
+    },
+  },
 };
 
 export default function PrivacyPolicyPage() {

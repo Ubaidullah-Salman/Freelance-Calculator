@@ -4,10 +4,16 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "About Us — Independent Freelancer Financial Tools",
+  title: "About Us — Free Financial Tools for Freelancers",
   description:
-    "Learn about FreelanceCalc, our mission to bring transparent, accurate, and private financial calculators to freelancers worldwide.",
-  alternates: { canonical: `${SITE_URL}/about` },
+    "Learn about FreelanceCalc and our mission to provide private, accurate financial fee calculators for freelancers worldwide.",
+  alternates: {
+    canonical: `${SITE_URL}/about`,
+    languages: {
+      en: `${SITE_URL}/about`,
+      "x-default": `${SITE_URL}/about`,
+    },
+  },
 };
 
 export default function AboutPage() {

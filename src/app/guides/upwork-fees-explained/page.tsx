@@ -6,12 +6,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.
 export const metadata: Metadata = {
   title: "How Much Does Upwork Take? Complete Fee Guide 2026",
   description:
-    "Detailed breakdown of Upwork's current 0%–15% service fee structure. Learn exactly how Upwork fees are calculated, which contract types pay 0%, and how to maximize your take-home pay.",
-  alternates: { canonical: `${SITE_URL}/guides/upwork-fees-explained` },
+    "Complete breakdown of Upwork's 0%–15% service fees. Learn how fees are calculated, 0% contract rules, and take-home pay tips.",
+  alternates: {
+    canonical: `${SITE_URL}/guides/upwork-fees-explained`,
+    languages: {
+      en: `${SITE_URL}/guides/upwork-fees-explained`,
+      "x-default": `${SITE_URL}/guides/upwork-fees-explained`,
+    },
+  },
   openGraph: {
     title: "How Much Does Upwork Take? Complete Fee Guide 2026",
     description:
-      "Everything freelancers need to know about Upwork's current fee structure — from Direct Contracts at 0% to standard contracts at 10%.",
+      "Complete breakdown of Upwork's 0%–15% service fees. Learn how fees are calculated, 0% contract rules, and take-home pay tips.",
     url: `${SITE_URL}/guides/upwork-fees-explained`,
     type: "article",
   },

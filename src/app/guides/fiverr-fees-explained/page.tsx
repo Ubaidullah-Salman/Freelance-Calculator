@@ -6,12 +6,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.
 export const metadata: Metadata = {
   title: "Fiverr Fees Explained: What Does Fiverr Take in 2026?",
   description:
-    "Complete breakdown of Fiverr's 20% seller commission — on base orders, extras, tips, and custom offers. Learn what you actually keep and how to calculate your real take-home pay on Fiverr.",
-  alternates: { canonical: `${SITE_URL}/guides/fiverr-fees-explained` },
+    "Complete guide to Fiverr's 20% seller fee on gigs, extras, and tips. Learn what you keep and how to calculate your net earnings.",
+  alternates: {
+    canonical: `${SITE_URL}/guides/fiverr-fees-explained`,
+    languages: {
+      en: `${SITE_URL}/guides/fiverr-fees-explained`,
+      "x-default": `${SITE_URL}/guides/fiverr-fees-explained`,
+    },
+  },
   openGraph: {
     title: "Fiverr Fees Explained: What Does Fiverr Take in 2026?",
     description:
-      "Fiverr charges sellers a flat 20% on everything they earn — gigs, extras, and tips. Here is exactly how that works and how to plan your pricing.",
+      "Complete guide to Fiverr's 20% seller fee on gigs, extras, and tips. Learn what you keep and how to calculate your net earnings.",
     url: `${SITE_URL}/guides/fiverr-fees-explained`,
     type: "article",
   },

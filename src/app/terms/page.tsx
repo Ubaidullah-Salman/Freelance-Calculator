@@ -4,10 +4,16 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Terms of Service & Disclaimer — FreelanceCalc",
+  title: "Terms of Service & Usage Disclaimer — FreelanceCalc",
   description:
-    "Terms of Service, educational disclaimers, and platform intellectual property notices for FreelanceCalc.",
-  alternates: { canonical: `${SITE_URL}/terms` },
+    "Terms of service, educational disclaimers, and platform intellectual property notices for FreelanceCalc fee tools.",
+  alternates: {
+    canonical: `${SITE_URL}/terms`,
+    languages: {
+      en: `${SITE_URL}/terms`,
+      "x-default": `${SITE_URL}/terms`,
+    },
+  },
 };
 
 export default function TermsPage() {

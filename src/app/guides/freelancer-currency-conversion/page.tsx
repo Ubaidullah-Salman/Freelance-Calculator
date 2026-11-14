@@ -4,14 +4,20 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Freelancer Currency Conversion Guide: USD to PKR, INR & More (2026)",
+  title: "Freelancer Currency Conversion Guide — USD to PKR & INR",
   description:
-    "Why Google's exchange rate differs from what hits your bank account. A complete guide to currency conversion for freelancers on Upwork, Fiverr, and Payoneer — with real examples for Pakistan, India, and Bangladesh.",
-  alternates: { canonical: `${SITE_URL}/guides/freelancer-currency-conversion` },
+    "Learn why bank exchange rates differ from Google rates, and how to minimize currency conversion losses on Upwork and Fiverr.",
+  alternates: {
+    canonical: `${SITE_URL}/guides/freelancer-currency-conversion`,
+    languages: {
+      en: `${SITE_URL}/guides/freelancer-currency-conversion`,
+      "x-default": `${SITE_URL}/guides/freelancer-currency-conversion`,
+    },
+  },
   openGraph: {
-    title: "Freelancer Currency Conversion: Why You Get Less Than Google's Rate",
+    title: "Freelancer Currency Conversion Guide — USD to PKR & INR",
     description:
-      "The real reason your USD earnings lose 3–7% in currency conversion — and what you can do about it as a freelancer.",
+      "Learn why bank exchange rates differ from Google rates, and how to minimize currency conversion losses on Upwork and Fiverr.",
     url: `${SITE_URL}/guides/freelancer-currency-conversion`,
     type: "article",
   },

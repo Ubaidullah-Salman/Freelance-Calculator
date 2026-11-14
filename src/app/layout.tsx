@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -14,15 +14,29 @@ const jakarta = Plus_Jakarta_Sans({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#faf8f5",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Freelance Fee Calculator — Upwork, Fiverr & Global Take-Home Pay",
+    default: "Freelance Fee Calculator — Upwork, Fiverr & Net Payouts",
     template: "%s | FreelanceCalc",
   },
   description:
-    "Free, transparent financial calculators for freelancers worldwide: calculate exact take-home pay after Upwork and Fiverr fees, convert USD to global currencies, and view tax rules.",
+    "Calculate exact take-home pay after Upwork and Fiverr fees, convert USD to local currencies, and estimate freelancer taxes.",
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      en: SITE_URL,
+      "x-default": SITE_URL,
+    },
+  },
   other: {
     "google-adsense-account": "ca-pub-2344318084516150",
   },
@@ -46,16 +60,15 @@ export default function RootLayout({
       <head>
         <Script
           id="adsense-script"
-          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2344318084516150"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-0L07XBD601"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

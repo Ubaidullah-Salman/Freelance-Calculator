@@ -4,10 +4,16 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Contact Us — FreelanceCalc",
+  title: "Contact FreelanceCalc — Support, Feedback & Inquiries",
   description:
-    "Get in touch with the FreelanceCalc team for support, feature suggestions, fee update reports, or business inquiries.",
-  alternates: { canonical: `${SITE_URL}/contact` },
+    "Get in touch with the FreelanceCalc team for support, fee update suggestions, bug reports, or general freelance tool inquiries.",
+  alternates: {
+    canonical: `${SITE_URL}/contact`,
+    languages: {
+      en: `${SITE_URL}/contact`,
+      "x-default": `${SITE_URL}/contact`,
+    },
+  },
 };
 
 export default function ContactPage() {

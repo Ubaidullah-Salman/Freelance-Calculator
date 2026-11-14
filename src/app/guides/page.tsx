@@ -6,8 +6,14 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.
 export const metadata: Metadata = {
   title: "Freelancer Guides — Fees, Tax & Currency Explained",
   description:
-    "Free, detailed guides for freelancers on Upwork fees, Fiverr commissions, currency conversion, and Pakistan tax — written in plain language with real examples.",
-  alternates: { canonical: `${SITE_URL}/guides` },
+    "Comprehensive guides for freelancers on Upwork fees, Fiverr commissions, bank currency conversion, and freelancer taxes.",
+  alternates: {
+    canonical: `${SITE_URL}/guides`,
+    languages: {
+      en: `${SITE_URL}/guides`,
+      "x-default": `${SITE_URL}/guides`,
+    },
+  },
 };
 
 const GUIDES = [

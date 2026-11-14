@@ -4,14 +4,20 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Freelance Fee Calculator (2026) — Upwork, Fiverr & Real Bank Payouts",
+  title: "Freelance Fee Calculator (2026) — Upwork & Fiverr Fees",
   description:
-    "Free, instant take-home pay calculators for freelancers: Upwork fees (0%–15%), Fiverr (20%), multi-currency bank conversion, and freelance tax withholding.",
-  alternates: { canonical: SITE_URL },
+    "Instant take-home pay calculators for Upwork fees (0%–15%), Fiverr commission (20%), currency conversion, and freelance taxes.",
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      en: SITE_URL,
+      "x-default": SITE_URL,
+    },
+  },
   openGraph: {
-    title: "Freelance Fee Calculator (2026) — Upwork, Fiverr & Real Bank Payouts",
+    title: "Freelance Fee Calculator (2026) — Upwork & Fiverr Fees",
     description:
-      "Instant take-home pay calculator for freelancers: Upwork fees, Fiverr fees, multi-currency conversion, and freelance tax withholding.",
+      "Instant take-home pay calculators for Upwork fees (0%–15%), Fiverr commission (20%), currency conversion, and freelance taxes.",
     url: SITE_URL,
     type: "website",
   },
