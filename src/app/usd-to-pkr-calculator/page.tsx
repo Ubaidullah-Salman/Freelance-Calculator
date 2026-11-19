@@ -5,6 +5,7 @@ import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
 import AffiliateTip from "@/components/ui/AffiliateTip";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
+import { AdSlotRectangle } from "@/components/ads/AdSlot";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
@@ -13,17 +14,17 @@ export const metadata: Metadata = {
   description:
     "Convert USD earnings to PKR, INR, PHP, and EUR with actual bank buying rates. Includes weekly and annual payout projections.",
   alternates: {
-    canonical: `${SITE_URL}/usd-to-pkr-calculator`,
+    canonical: `${SITE_URL}/usd-to-pkr-calculator/`,
     languages: {
-      en: `${SITE_URL}/usd-to-pkr-calculator`,
-      "x-default": `${SITE_URL}/usd-to-pkr-calculator`,
+      en: `${SITE_URL}/usd-to-pkr-calculator/`,
+      "x-default": `${SITE_URL}/usd-to-pkr-calculator/`,
     },
   },
   openGraph: {
     title: "Freelance Currency Converter — Real Bank Rates (USD/PKR)",
     description:
       "Convert USD earnings to PKR, INR, PHP, and EUR with actual bank buying rates. Includes weekly and annual payout projections.",
-    url: `${SITE_URL}/usd-to-pkr-calculator`,
+    url: `${SITE_URL}/usd-to-pkr-calculator/`,
     type: "website",
   },
 };
@@ -52,7 +53,7 @@ export default function UsdPkrPage() {
       <WebApplicationSchema
         name="Freelance Multi-Currency Converter"
         description="Convert USD client payments into global local currencies (PKR, INR, PHP, EUR, GBP, CAD, AUD, BDT, NGN) with custom bank exchange rates."
-        url={`${SITE_URL}/usd-to-pkr-calculator`}
+        url={`${SITE_URL}/usd-to-pkr-calculator/`}
       />
 
       {/* Header */}
@@ -82,6 +83,12 @@ export default function UsdPkrPage() {
       <div className="mt-6">
         <AffiliateTip platform="currency" />
       </div>
+
+      {/* AdSense Rectangle */}
+      <section className="my-8" aria-label="Advertisement">
+        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <AdSlotRectangle slotName="0987654321" />
+      </section>
 
       {/* How it works */}
       <section
@@ -160,6 +167,11 @@ export default function UsdPkrPage() {
             href: "/pakistan-freelancer-tax",
             label: "Pakistan Tax",
             description: "Calculate export withholding tax under FBR Section 154A",
+          },
+          {
+            href: "/guides/freelancer-currency-conversion",
+            label: "Currency Conversion Guide",
+            description: "Why you get less than Google's exchange rate and how to keep more earnings",
           },
         ]}
       />

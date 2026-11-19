@@ -5,6 +5,7 @@ const TOOL_LINKS = [
   { href: "/fiverr-fee-calculator", label: "Fiverr Fees" },
   { href: "/usd-to-pkr-calculator", label: "Currency Converter" },
   { href: "/pakistan-freelancer-tax", label: "Pakistan Tax" },
+  { href: "/invoice-generator", label: "Invoice Generator" },
 ];
 
 const GUIDE_LINKS = [
@@ -39,7 +40,7 @@ export default function Footer() {
             </p>
             <div className="mt-3 flex items-center gap-3 text-stone-400">
               <a
-                href="https://x.com"
+                href="https://x.com/freelancecalc"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-stone-700 transition-colors"
@@ -50,7 +51,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://www.linkedin.com"
+                href="https://www.linkedin.com/company/freelancecalc"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-stone-700 transition-colors"
@@ -61,7 +62,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://github.com"
+                href="https://github.com/freelancecalc"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-stone-700 transition-colors"

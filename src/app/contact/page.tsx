@@ -8,11 +8,17 @@ export const metadata: Metadata = {
   description:
     "Get in touch with the FreelanceCalc team for support, fee update suggestions, bug reports, or general freelance tool inquiries.",
   alternates: {
-    canonical: `${SITE_URL}/contact`,
+    canonical: `${SITE_URL}/contact/`,
     languages: {
-      en: `${SITE_URL}/contact`,
-      "x-default": `${SITE_URL}/contact`,
+      en: `${SITE_URL}/contact/`,
+      "x-default": `${SITE_URL}/contact/`,
     },
+  },
+  openGraph: {
+    title: "Contact FreelanceCalc — Support, Feedback & Inquiries",
+    description: "Get in touch with the FreelanceCalc team for support, fee update suggestions, bug reports, or general freelance tool inquiries.",
+    url: `${SITE_URL}/contact/`,
+    type: "website",
   },
 };
 
@@ -31,7 +37,7 @@ export default function ContactPage() {
         "@type": "ListItem",
         position: 2,
         name: "Contact",
-        item: `${SITE_URL}/contact`,
+        item: `${SITE_URL}/contact/`,
       },
     ],
   };

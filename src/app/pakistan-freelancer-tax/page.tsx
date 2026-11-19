@@ -5,6 +5,7 @@ import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
 import AffiliateTip from "@/components/ui/AffiliateTip";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
+import { AdSlotRectangle } from "@/components/ads/AdSlot";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
@@ -13,17 +14,17 @@ export const metadata: Metadata = {
   description:
     "Calculate FBR Section 154A withholding tax on IT freelance export income: 0.25% PSEB rate vs 1% non-registered for FY 2026.",
   alternates: {
-    canonical: `${SITE_URL}/pakistan-freelancer-tax`,
+    canonical: `${SITE_URL}/pakistan-freelancer-tax/`,
     languages: {
-      en: `${SITE_URL}/pakistan-freelancer-tax`,
-      "x-default": `${SITE_URL}/pakistan-freelancer-tax`,
+      en: `${SITE_URL}/pakistan-freelancer-tax/`,
+      "x-default": `${SITE_URL}/pakistan-freelancer-tax/`,
     },
   },
   openGraph: {
     title: "Pakistan Freelancer Tax Calculator (2026) — FBR 154A",
     description:
       "Calculate FBR Section 154A withholding tax on IT freelance export income: 0.25% PSEB rate vs 1% non-registered for FY 2026.",
-    url: `${SITE_URL}/pakistan-freelancer-tax`,
+    url: `${SITE_URL}/pakistan-freelancer-tax/`,
     type: "website",
   },
 };
@@ -90,7 +91,7 @@ export default function PakistanTaxPage() {
       <WebApplicationSchema
         name="Pakistan Freelancer Tax Calculator"
         description="Calculate official FBR Section 154A withholding tax on IT and service export remittances for Tax Year 2027 / Finance Act 2026."
-        url={`${SITE_URL}/pakistan-freelancer-tax`}
+        url={`${SITE_URL}/pakistan-freelancer-tax/`}
       />
 
       {/* Header */}
@@ -120,6 +121,12 @@ export default function PakistanTaxPage() {
       <div className="mt-6">
         <AffiliateTip platform="tax" />
       </div>
+
+      {/* AdSense Rectangle */}
+      <section className="my-8" aria-label="Advertisement">
+        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <AdSlotRectangle slotName="0987654321" />
+      </section>
 
       {/* How it works */}
       <section
@@ -273,6 +280,11 @@ export default function PakistanTaxPage() {
             href: "/fiverr-fee-calculator",
             label: "Fiverr Fees",
             description: "Calculate what you keep after Fiverr's standard 20% commission",
+          },
+          {
+            href: "/guides/freelancer-currency-conversion",
+            label: "Currency Conversion Guide",
+            description: "How currency conversion affects your final local bank deposit",
           },
         ]}
       />

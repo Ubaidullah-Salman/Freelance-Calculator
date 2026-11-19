@@ -5,6 +5,7 @@ import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
 import AffiliateTip from "@/components/ui/AffiliateTip";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
+import { AdSlotRectangle } from "@/components/ads/AdSlot";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
@@ -13,17 +14,17 @@ export const metadata: Metadata = {
   description:
     "Calculate net earnings after Fiverr's 20% cut on orders, extras, and tips. Includes reverse pricing formulas and payout fees.",
   alternates: {
-    canonical: `${SITE_URL}/fiverr-fee-calculator`,
+    canonical: `${SITE_URL}/fiverr-fee-calculator/`,
     languages: {
-      en: `${SITE_URL}/fiverr-fee-calculator`,
-      "x-default": `${SITE_URL}/fiverr-fee-calculator`,
+      en: `${SITE_URL}/fiverr-fee-calculator/`,
+      "x-default": `${SITE_URL}/fiverr-fee-calculator/`,
     },
   },
   openGraph: {
     title: "Fiverr Fee Calculator (2026) — 20% Fee & Take-Home Pay",
     description:
       "Calculate net earnings after Fiverr's 20% cut on orders, extras, and tips. Includes reverse pricing formulas and payout fees.",
-    url: `${SITE_URL}/fiverr-fee-calculator`,
+    url: `${SITE_URL}/fiverr-fee-calculator/`,
     type: "website",
   },
 };
@@ -57,7 +58,7 @@ export default function FiverrPage() {
       <WebApplicationSchema
         name="Fiverr Fee Calculator"
         description="Calculate exact seller take-home pay after Fiverr's 20% commission across orders, extras, tips, and withdrawal methods."
-        url={`${SITE_URL}/fiverr-fee-calculator`}
+        url={`${SITE_URL}/fiverr-fee-calculator/`}
       />
 
       {/* Header */}
@@ -87,6 +88,12 @@ export default function FiverrPage() {
       <div className="mt-6">
         <AffiliateTip platform="fiverr" />
       </div>
+
+      {/* AdSense Rectangle */}
+      <section className="my-8" aria-label="Advertisement">
+        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <AdSlotRectangle slotName="0987654321" />
+      </section>
 
       {/* How it works */}
       <section
@@ -233,6 +240,11 @@ export default function FiverrPage() {
             href: "/pakistan-freelancer-tax",
             label: "Pakistan Tax",
             description: "Calculate withholding tax under FBR Section 154A",
+          },
+          {
+            href: "/guides/fiverr-fees-explained",
+            label: "Fiverr Fees Explained",
+            description: "Complete guide to Fiverr's 20% seller fee on gigs, extras, and tips",
           },
         ]}
       />

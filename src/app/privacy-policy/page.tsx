@@ -8,11 +8,17 @@ export const metadata: Metadata = {
   description:
     "Privacy policy for FreelanceCalc. Learn about our client-side privacy guarantee, data protection, and cookie disclosures.",
   alternates: {
-    canonical: `${SITE_URL}/privacy-policy`,
+    canonical: `${SITE_URL}/privacy-policy/`,
     languages: {
-      en: `${SITE_URL}/privacy-policy`,
-      "x-default": `${SITE_URL}/privacy-policy`,
+      en: `${SITE_URL}/privacy-policy/`,
+      "x-default": `${SITE_URL}/privacy-policy/`,
     },
+  },
+  openGraph: {
+    title: "Privacy Policy & Data Protection — FreelanceCalc",
+    description: "Privacy policy for FreelanceCalc. Learn about our client-side privacy guarantee, data protection, and cookie disclosures.",
+    url: `${SITE_URL}/privacy-policy/`,
+    type: "website",
   },
 };
 
@@ -57,9 +63,12 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-bold text-stone-900 mb-2">2. Cookies and Web Beacons</h2>
+          <h2 className="text-base font-bold text-stone-900 mb-2">2. Cookies and Local Storage</h2>
           <p>
-            FreelanceCalc uses &quot;cookies&quot; to store information including visitors&apos; preferences and the pages on the website that the visitor accessed or visited. The information is used to optimize the users&apos; experience by customizing our web page content based on visitors&apos; browser type and/or other information.
+            FreelanceCalc uses &quot;cookies&quot; to store information including visitors&apos; preferences and the pages on the website that the visitor accessed or visited.
+          </p>
+          <p className="mt-2">
+            For the <strong>Invoice Generator</strong> tool, we use your browser&apos;s <strong>Local Storage</strong> to save your invoice drafts. This allows you to close the browser and return to your work later. This data is stored entirely on your device and is never transmitted to our servers. You can clear this data at any time by clicking the &quot;Clear Invoice&quot; button within the tool or by clearing your browser&apos;s site data.
           </p>
         </section>
 

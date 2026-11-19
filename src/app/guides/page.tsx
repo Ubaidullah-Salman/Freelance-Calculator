@@ -8,11 +8,17 @@ export const metadata: Metadata = {
   description:
     "Comprehensive guides for freelancers on Upwork fees, Fiverr commissions, bank currency conversion, and freelancer taxes.",
   alternates: {
-    canonical: `${SITE_URL}/guides`,
+    canonical: `${SITE_URL}/guides/`,
     languages: {
-      en: `${SITE_URL}/guides`,
-      "x-default": `${SITE_URL}/guides`,
+      en: `${SITE_URL}/guides/`,
+      "x-default": `${SITE_URL}/guides/`,
     },
+  },
+  openGraph: {
+    title: "Freelancer Guides — Fees, Tax & Currency Explained",
+    description: "Comprehensive guides for freelancers on Upwork fees, Fiverr commissions, bank currency conversion, and freelancer taxes.",
+    url: `${SITE_URL}/guides/`,
+    type: "website",
   },
 };
 
@@ -58,12 +64,12 @@ export default function GuidesIndex() {
     name: "Freelancer Guides — Fees, Tax & Currency Explained",
     description:
       "Free, detailed guides for freelancers on Upwork fees, Fiverr commissions, currency conversion, and Pakistan tax.",
-    url: `${SITE_URL}/guides`,
+    url: `${SITE_URL}/guides/`,
     hasPart: GUIDES.map((g) => ({
       "@type": "Article",
       name: g.title,
       description: g.desc,
-      url: `${SITE_URL}${g.href}`,
+      url: `${SITE_URL}${g.href}/`,
     })),
   };
 
@@ -81,7 +87,7 @@ export default function GuidesIndex() {
         "@type": "ListItem",
         position: 2,
         name: "Guides",
-        item: `${SITE_URL}/guides`,
+        item: `${SITE_URL}/guides/`,
       },
     ],
   };

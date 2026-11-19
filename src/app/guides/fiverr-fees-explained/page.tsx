@@ -4,21 +4,20 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Fiverr Fees Explained: What Does Fiverr Take in 2026?",
+  title: "Fiverr Fees Explained: What Fiverr Takes in 2026?",
   description:
     "Complete guide to Fiverr's 20% seller fee on gigs, extras, and tips. Learn what you keep and how to calculate your net earnings.",
   alternates: {
-    canonical: `${SITE_URL}/guides/fiverr-fees-explained`,
+    canonical: `${SITE_URL}/guides/fiverr-fees-explained/`,
     languages: {
-      en: `${SITE_URL}/guides/fiverr-fees-explained`,
-      "x-default": `${SITE_URL}/guides/fiverr-fees-explained`,
+      en: `${SITE_URL}/guides/fiverr-fees-explained/`,
+      "x-default": `${SITE_URL}/guides/fiverr-fees-explained/`,
     },
   },
   openGraph: {
-    title: "Fiverr Fees Explained: What Does Fiverr Take in 2026?",
-    description:
-      "Complete guide to Fiverr's 20% seller fee on gigs, extras, and tips. Learn what you keep and how to calculate your net earnings.",
-    url: `${SITE_URL}/guides/fiverr-fees-explained`,
+    title: "Fiverr Fees Explained: What Fiverr Takes in 2026?",
+    description: "Complete guide to Fiverr's 20% seller fee on gigs, extras, and tips. Learn what you keep and how to calculate your net earnings.",
+    url: `${SITE_URL}/guides/fiverr-fees-explained/`,
     type: "article",
   },
 };
@@ -30,7 +29,7 @@ export default function FiverrFeesGuide() {
     headline: "Fiverr Fees Explained: What Does Fiverr Take in 2026?",
     description:
       "Complete breakdown of Fiverr's 20% seller commission — on base orders, extras, tips, and custom offers. Learn what you actually keep and how to calculate your real take-home pay on Fiverr.",
-    url: `${SITE_URL}/guides/fiverr-fees-explained`,
+    url: `${SITE_URL}/guides/fiverr-fees-explained/`,
     datePublished: "2026-10-31T00:00:00Z",
     dateModified: "2026-11-08T00:00:00Z",
     author: {
@@ -45,7 +44,7 @@ export default function FiverrFeesGuide() {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}/guides/fiverr-fees-explained`,
+      "@id": `${SITE_URL}/guides/fiverr-fees-explained/`,
     },
   };
 
@@ -69,7 +68,7 @@ export default function FiverrFeesGuide() {
         "@type": "ListItem",
         position: 3,
         name: "Fiverr Fees Explained",
-        item: `${SITE_URL}/guides/fiverr-fees-explained`,
+        item: `${SITE_URL}/guides/fiverr-fees-explained/`,
       },
     ],
   };

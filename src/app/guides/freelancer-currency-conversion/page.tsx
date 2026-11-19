@@ -8,17 +8,16 @@ export const metadata: Metadata = {
   description:
     "Learn why bank exchange rates differ from Google rates, and how to minimize currency conversion losses on Upwork and Fiverr.",
   alternates: {
-    canonical: `${SITE_URL}/guides/freelancer-currency-conversion`,
+    canonical: `${SITE_URL}/guides/freelancer-currency-conversion/`,
     languages: {
-      en: `${SITE_URL}/guides/freelancer-currency-conversion`,
-      "x-default": `${SITE_URL}/guides/freelancer-currency-conversion`,
+      en: `${SITE_URL}/guides/freelancer-currency-conversion/`,
+      "x-default": `${SITE_URL}/guides/freelancer-currency-conversion/`,
     },
   },
   openGraph: {
     title: "Freelancer Currency Conversion Guide — USD to PKR & INR",
-    description:
-      "Learn why bank exchange rates differ from Google rates, and how to minimize currency conversion losses on Upwork and Fiverr.",
-    url: `${SITE_URL}/guides/freelancer-currency-conversion`,
+    description: "Learn why bank exchange rates differ from Google rates, and how to minimize currency conversion losses on Upwork and Fiverr.",
+    url: `${SITE_URL}/guides/freelancer-currency-conversion/`,
     type: "article",
   },
 };
@@ -30,7 +29,7 @@ export default function CurrencyConversionGuide() {
     headline: "Freelancer Currency Conversion Guide: USD to PKR, INR & More (2026)",
     description:
       "Why Google's exchange rate differs from what hits your bank account. A complete guide to currency conversion for freelancers on Upwork, Fiverr, and Payoneer — with real examples for Pakistan, India, and Bangladesh.",
-    url: `${SITE_URL}/guides/freelancer-currency-conversion`,
+    url: `${SITE_URL}/guides/freelancer-currency-conversion/`,
     datePublished: "2026-10-31T00:00:00Z",
     dateModified: "2026-11-08T00:00:00Z",
     author: {
@@ -45,7 +44,7 @@ export default function CurrencyConversionGuide() {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}/guides/freelancer-currency-conversion`,
+      "@id": `${SITE_URL}/guides/freelancer-currency-conversion/`,
     },
   };
 
@@ -69,7 +68,7 @@ export default function CurrencyConversionGuide() {
         "@type": "ListItem",
         position: 3,
         name: "Freelancer Currency Conversion",
-        item: `${SITE_URL}/guides/freelancer-currency-conversion`,
+        item: `${SITE_URL}/guides/freelancer-currency-conversion/`,
       },
     ],
   };

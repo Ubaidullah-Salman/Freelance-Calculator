@@ -8,11 +8,17 @@ export const metadata: Metadata = {
   description:
     "Learn about FreelanceCalc and our mission to provide private, accurate financial fee calculators for freelancers worldwide.",
   alternates: {
-    canonical: `${SITE_URL}/about`,
+    canonical: `${SITE_URL}/about/`,
     languages: {
-      en: `${SITE_URL}/about`,
-      "x-default": `${SITE_URL}/about`,
+      en: `${SITE_URL}/about/`,
+      "x-default": `${SITE_URL}/about/`,
     },
+  },
+  openGraph: {
+    title: "About Us — Free Financial Tools for Freelancers",
+    description: "Learn about FreelanceCalc and our mission to provide private, accurate financial fee calculators for freelancers worldwide.",
+    url: `${SITE_URL}/about/`,
+    type: "website",
   },
 };
 

@@ -5,20 +5,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.
 
 export const metadata: Metadata = {
   title: "How Much Does Upwork Take? Complete Fee Guide 2026",
-  description:
-    "Complete breakdown of Upwork's 0%–15% service fees. Learn how fees are calculated, 0% contract rules, and take-home pay tips.",
+  description: "Complete breakdown of Upwork's 0%–15% service fees. Learn how fees are calculated, 0% contract rules, and take-home pay tips.",
   alternates: {
-    canonical: `${SITE_URL}/guides/upwork-fees-explained`,
+    canonical: `${SITE_URL}/guides/upwork-fees-explained/`,
     languages: {
-      en: `${SITE_URL}/guides/upwork-fees-explained`,
-      "x-default": `${SITE_URL}/guides/upwork-fees-explained`,
+      en: `${SITE_URL}/guides/upwork-fees-explained/`,
+      "x-default": `${SITE_URL}/guides/upwork-fees-explained/`,
     },
   },
   openGraph: {
     title: "How Much Does Upwork Take? Complete Fee Guide 2026",
-    description:
-      "Complete breakdown of Upwork's 0%–15% service fees. Learn how fees are calculated, 0% contract rules, and take-home pay tips.",
-    url: `${SITE_URL}/guides/upwork-fees-explained`,
+    description: "Complete breakdown of Upwork's 0%–15% service fees. Learn how fees are calculated, 0% contract rules, and take-home pay tips.",
+    url: `${SITE_URL}/guides/upwork-fees-explained/`,
     type: "article",
   },
 };
@@ -30,7 +28,7 @@ export default function UpworkFeesGuide() {
     headline: "How Much Does Upwork Take? Complete Fee Guide 2026",
     description:
       "Detailed breakdown of Upwork's current 0%–15% service fee structure. Learn exactly how Upwork fees are calculated, which contract types pay 0%, and how to maximize your take-home pay.",
-    url: `${SITE_URL}/guides/upwork-fees-explained`,
+    url: `${SITE_URL}/guides/upwork-fees-explained/`,
     datePublished: "2026-10-31T00:00:00Z",
     dateModified: "2026-11-08T00:00:00Z",
     author: {
@@ -45,7 +43,7 @@ export default function UpworkFeesGuide() {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}/guides/upwork-fees-explained`,
+      "@id": `${SITE_URL}/guides/upwork-fees-explained/`,
     },
   };
 
@@ -69,7 +67,7 @@ export default function UpworkFeesGuide() {
         "@type": "ListItem",
         position: 3,
         name: "Upwork Fees Explained",
-        item: `${SITE_URL}/guides/upwork-fees-explained`,
+        item: `${SITE_URL}/guides/upwork-fees-explained/`,
       },
     ],
   };

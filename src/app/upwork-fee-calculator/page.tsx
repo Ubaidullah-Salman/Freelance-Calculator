@@ -5,6 +5,7 @@ import RelatedLinks from "@/components/ui/RelatedLinks";
 import FaqSection from "@/components/ui/FaqSection";
 import AffiliateTip from "@/components/ui/AffiliateTip";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
+import { AdSlotRectangle } from "@/components/ads/AdSlot";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
@@ -13,17 +14,17 @@ export const metadata: Metadata = {
   description:
     "Calculate your Upwork take-home pay under 0%–15% fee tiers. Covers 10% standard rate, 0% Direct Contracts, and real bank payouts.",
   alternates: {
-    canonical: `${SITE_URL}/upwork-fee-calculator`,
+    canonical: `${SITE_URL}/upwork-fee-calculator/`,
     languages: {
-      en: `${SITE_URL}/upwork-fee-calculator`,
-      "x-default": `${SITE_URL}/upwork-fee-calculator`,
+      en: `${SITE_URL}/upwork-fee-calculator/`,
+      "x-default": `${SITE_URL}/upwork-fee-calculator/`,
     },
   },
   openGraph: {
     title: "Upwork Fee Calculator (2026) — Calculate Exact Take-Home",
     description:
       "Calculate your Upwork take-home pay under 0%–15% fee tiers. Covers 10% standard rate, 0% Direct Contracts, and real bank payouts.",
-    url: `${SITE_URL}/upwork-fee-calculator`,
+    url: `${SITE_URL}/upwork-fee-calculator/`,
     type: "website",
   },
 };
@@ -57,7 +58,7 @@ export default function UpworkPage() {
       <WebApplicationSchema
         name="Upwork Fee Calculator"
         description="Calculate net freelance earnings after Upwork's 0% to 15% per-contract service fees, bonus deductions, and local currency conversion."
-        url={`${SITE_URL}/upwork-fee-calculator`}
+        url={`${SITE_URL}/upwork-fee-calculator/`}
       />
 
       {/* Header */}
@@ -87,6 +88,12 @@ export default function UpworkPage() {
       <div className="mt-6">
         <AffiliateTip platform="upwork" />
       </div>
+
+      {/* AdSense Rectangle */}
+      <section className="my-8" aria-label="Advertisement">
+        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <AdSlotRectangle slotName="0987654321" />
+      </section>
 
       {/* How it works */}
       <section
@@ -211,6 +218,11 @@ export default function UpworkPage() {
             href: "/pakistan-freelancer-tax",
             label: "Pakistan Tax",
             description: "Calculate export withholding tax under FBR Section 154A",
+          },
+          {
+            href: "/guides/upwork-fees-explained",
+            label: "Upwork Fees Explained",
+            description: "Complete guide to Upwork's current 0%–15% fee structure",
           },
         ]}
       />

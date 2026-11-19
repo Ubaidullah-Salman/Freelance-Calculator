@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSlotLeaderboard } from "@/components/ads/AdSlot";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
@@ -8,17 +9,17 @@ export const metadata: Metadata = {
   description:
     "Instant take-home pay calculators for Upwork fees (0%–15%), Fiverr commission (20%), currency conversion, and freelance taxes.",
   alternates: {
-    canonical: SITE_URL,
+    canonical: `${SITE_URL}/`,
     languages: {
-      en: SITE_URL,
-      "x-default": SITE_URL,
+      en: `${SITE_URL}/`,
+      "x-default": `${SITE_URL}/`,
     },
   },
   openGraph: {
     title: "Freelance Fee Calculator (2026) — Upwork & Fiverr Fees",
     description:
       "Instant take-home pay calculators for Upwork fees (0%–15%), Fiverr commission (20%), currency conversion, and freelance taxes.",
-    url: SITE_URL,
+    url: `${SITE_URL}/`,
     type: "website",
   },
 };
@@ -68,6 +69,21 @@ const PLATFORM_TOOLS = [
     ],
     cta: "Convert Freelance Income",
     id: "tool-card-usd-pkr",
+  },
+  {
+    href: "/invoice-generator",
+    badge: "New",
+    badgeColor: "bg-orange-50 text-orange-800 border-orange-200",
+    fee: "Free / Private",
+    title: "Invoice Generator",
+    subtitle: "Create professional, branded PDF invoices directly in your browser. All data stays local.",
+    features: [
+      "Auto-save drafts to local storage",
+      "Supports 6 major currencies & tax/discounts",
+      "Clean, printer-friendly PDF export",
+    ],
+    cta: "Generate Invoice",
+    id: "tool-card-invoice",
   },
 ];
 
@@ -144,7 +160,7 @@ export default function HomePage() {
           Know your real freelance earnings.
         </h1>
         <p className="mt-2.5 max-w-2xl text-base text-stone-600 sm:text-lg leading-relaxed">
-          See exactly how much hits your bank account after platform commissions, withdrawal fees, exchange rates, and taxes.
+          See exactly how much hits your bank account after platform commissions, withdrawal fees, exchange rates, and taxes. <Link href="/guides" className="text-emerald-700 font-semibold hover:text-emerald-800 transition-colors">Browse all guides</Link> to learn the complete breakdown for each platform.
         </p>
 
         {/* Feature Badges */}
@@ -333,6 +349,12 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* AdSense Leaderboard */}
+      <section className="mb-8" aria-label="Advertisement">
+        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <AdSlotLeaderboard slotName="1234567890" />
       </section>
 
       {/* 3-Step Simple Guide */}

@@ -56,6 +56,16 @@ const NAV_LINKS = [
       </svg>
     ),
   },
+  {
+    href: "/invoice-generator",
+    label: "Invoices",
+    tag: "Free",
+    icon: (
+      <svg className="h-4 w-4 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    ),
+  },
 ];
 
 export default function Header() {
@@ -199,6 +209,28 @@ export default function Header() {
               );
             })}
           </ul>
+
+          <div className="mt-3 pt-3 border-t border-stone-100">
+            <p className="mb-2 px-1 text-[11px] font-medium text-stone-500 uppercase tracking-wider">Company & Legal</p>
+            <ul className="space-y-1" role="list">
+              {[
+                { href: "/about/", label: "About Us" },
+                { href: "/contact/", label: "Contact Us" },
+                { href: "/privacy-policy/", label: "Privacy Policy" },
+                { href: "/terms/", label: "Terms of Service" },
+              ].map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm text-stone-700 hover:text-stone-950 hover:bg-stone-50/80 rounded-lg transition-colors"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 px-1">
             <span className="flex items-center gap-1.5">

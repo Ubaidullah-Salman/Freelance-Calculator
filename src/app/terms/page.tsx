@@ -8,11 +8,17 @@ export const metadata: Metadata = {
   description:
     "Terms of service, educational disclaimers, and platform intellectual property notices for FreelanceCalc fee tools.",
   alternates: {
-    canonical: `${SITE_URL}/terms`,
+    canonical: `${SITE_URL}/terms/`,
     languages: {
-      en: `${SITE_URL}/terms`,
-      "x-default": `${SITE_URL}/terms`,
+      en: `${SITE_URL}/terms/`,
+      "x-default": `${SITE_URL}/terms/`,
     },
+  },
+  openGraph: {
+    title: "Terms of Service & Usage Disclaimer — FreelanceCalc",
+    description: "Terms of service, educational disclaimers, and platform intellectual property notices for FreelanceCalc fee tools.",
+    url: `${SITE_URL}/terms/`,
+    type: "website",
   },
 };
 

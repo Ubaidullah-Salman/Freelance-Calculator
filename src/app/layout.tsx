@@ -31,10 +31,10 @@ export const metadata: Metadata = {
     "Calculate exact take-home pay after Upwork and Fiverr fees, convert USD to local currencies, and estimate freelancer taxes.",
   robots: { index: true, follow: true },
   alternates: {
-    canonical: SITE_URL,
+    canonical: `${SITE_URL}/`,
     languages: {
-      en: SITE_URL,
-      "x-default": SITE_URL,
+      en: `${SITE_URL}/`,
+      "x-default": `${SITE_URL}/`,
     },
   },
   other: {
