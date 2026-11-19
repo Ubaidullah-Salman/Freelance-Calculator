@@ -1,51 +1,21 @@
 "use client";
 
-import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { AdSlotLeaderboard } from "@/components/ads/AdSlot";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
-export const metadata: Metadata = {
-  title: "Invoice Generator — Create Professional Invoices Free | FreelanceCalc",
-  description:
-    "Generate professional PDF invoices in minutes. Free invoice template with customizable branding, auto-calculated totals, and browser-based draft storage. No sign-up required.",
-  keywords: [
-    "invoice generator",
-    "free invoice template",
-    "PDF invoice creator",
-    "freelance invoice",
-    "professional invoice",
-    "invoice maker",
-    "small business invoice",
-    "consultant invoice",
-  ].join(", "),
-  alternates: {
-    canonical: `${SITE_URL}/invoice-generator/`,
-    languages: {
-      en: `${SITE_URL}/invoice-generator/`,
-      "x-default": `${SITE_URL}/invoice-generator/`,
-    },
-  },
-  openGraph: {
-    title: "Invoice Generator — Create Professional Invoices Free",
-    description:
-      "Generate professional PDF invoices in minutes. Free invoice template with customizable branding, auto-calculated totals, and browser-based draft storage.",
-    url: `${SITE_URL}/invoice-generator/`,
-    type: "website",
-  },
-};
-
-// Dynamic import for client components
 const InvoiceProvider = dynamic(
   () => import("@/components/invoice/InvoicePageClient").then((m) => m.InvoiceProvider),
   { ssr: false }
 );
+
 const InvoiceEditorWrapper = dynamic(
   () => import("@/components/invoice/InvoicePageClient").then((m) => m.InvoiceEditorWrapper),
   { ssr: false }
 );
+
 const InvoicePreviewWrapper = dynamic(
   () => import("@/components/invoice/InvoicePageClient").then((m) => m.InvoicePreviewWrapper),
   { ssr: false }
@@ -228,24 +198,6 @@ export default function InvoiceGeneratorPage() {
         </div>
       </section>
     </main>
-  );
-}
-
-// Server-only placeholder — the actual preview renders inside InvoicePageClient on the left column
-function InvoicePreviewPlaceholder() {
-  return (
-    <div className="hidden lg:block rounded-xl border border-stone-200 border-dashed bg-stone-50 p-6">
-      <div className="text-center space-y-3">
-        <svg className="mx-auto h-8 w-8 text-stone-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-        <div>
-          <p className="text-sm font-medium text-stone-500">Live Invoice Preview</p>
-          <p className="text-xs text-stone-400 mt-1">Start typing in the editor to see your invoice preview update here in real-time.</p>
-        </div>
-      </div>
-    </div>
   );
 }
 
