@@ -1,27 +1,35 @@
 export interface WebAppSchemaProps {
   name: string;
   description: string;
-  url: string;
+  url?: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
+  offersPrice?: string;
+  offersPriceCurrency?: string;
 }
 
 export default function WebApplicationSchema({
   name,
   description,
   url,
+  applicationCategory = "FinanceApplication",
+  operatingSystem = "All",
+  offersPrice = "0",
+  offersPriceCurrency = "USD",
 }: WebAppSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name,
     description,
-    url,
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "All",
+    url: url ?? (typeof window !== "undefined" ? window.location.href : undefined),
+    applicationCategory,
+    operatingSystem,
     browserRequirements: "Requires JavaScript",
     offers: {
       "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
+      price: offersPrice,
+      priceCurrency: offersPriceCurrency,
     },
   };
 

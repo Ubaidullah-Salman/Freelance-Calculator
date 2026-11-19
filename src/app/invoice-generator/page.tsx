@@ -62,10 +62,6 @@ export default function InvoiceGeneratorPage() {
       <WebApplicationSchema
         name="FreelanceCalc Invoice Generator"
         description="Free professional invoice generator for freelancers. Create PDF invoices with customizable branding, line items, discount, tax, and partial payments."
-        applicationCategory="BusinessApplication"
-        operatingSystem="Web Browser"
-        offersPrice="0"
-        offersPriceCurrency="USD"
       />
 
       {/* Header */}

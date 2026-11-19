@@ -723,7 +723,7 @@ function SectionCard({ title, isOpen, onToggle, children }: SectionCardProps) {
 interface TextFieldProps {
   id: string;
   label: string;
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
   type?: string;
   placeholder?: string;
