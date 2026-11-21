@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Invoice Generator — Create Professional Invoices Free | FreelanceCalc",
+  title: "Invoice Generator — Create Professional Invoices Free",
   description:
-    "Generate professional PDF invoices in minutes. Free invoice template with customizable branding, auto-calculated totals, and browser-based draft storage. No sign-up required.",
+    "Generate professional PDF invoices in minutes. Customizable branding, automated totals, and client-side draft storage.",
   keywords: [
     "invoice generator",
     "free invoice template",

@@ -38,6 +38,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
+      url: `${SITE_URL}/time-card-calculator/`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
       url: `${SITE_URL}/invoice-generator/`,
       lastModified: contentUpdated,
       changeFrequency: "weekly",

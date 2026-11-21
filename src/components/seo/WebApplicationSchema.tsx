@@ -22,7 +22,7 @@ export default function WebApplicationSchema({
     "@type": "WebApplication",
     name,
     description,
-    url: url ?? (typeof window !== "undefined" ? window.location.href : undefined),
+    url: url ?? (typeof window !== "undefined" ? window.location.href : "https://www.freelancecalc.app"),
     applicationCategory,
     operatingSystem,
     browserRequirements: "Requires JavaScript",
@@ -37,6 +37,7 @@ export default function WebApplicationSchema({
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      suppressHydrationWarning
     />
   );
 }

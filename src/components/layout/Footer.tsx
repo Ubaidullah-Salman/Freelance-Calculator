@@ -5,6 +5,7 @@ const TOOL_LINKS = [
   { href: "/fiverr-fee-calculator", label: "Fiverr Fees" },
   { href: "/usd-to-pkr-calculator", label: "Currency Converter" },
   { href: "/pakistan-freelancer-tax", label: "Pakistan Tax" },
+  { href: "/time-card-calculator", label: "Time Card Calculator" },
   { href: "/invoice-generator", label: "Invoice Generator" },
 ];
 

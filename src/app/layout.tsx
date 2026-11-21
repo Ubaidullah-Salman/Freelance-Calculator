@@ -56,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <Script
           id="adsense-script"
@@ -79,6 +79,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
+        suppressHydrationWarning
         className={`min-h-screen bg-[#faf8f5] font-sans text-stone-900 antialiased flex flex-col ${jakarta.variable} ${jakarta.className}`}
       >
         <Header />

@@ -6,6 +6,16 @@ import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
   {
+    href: "/time-card-calculator",
+    label: "Time Card",
+    tag: "Track",
+    icon: (
+      <svg className="h-4 w-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+  {
     href: "/upwork-fee-calculator",
     label: "Upwork",
     tag: "0%–15%",
@@ -65,7 +75,7 @@ const NAV_LINKS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
     ),
-  },
+  }
 ];
 
 export default function Header() {
@@ -115,7 +125,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center gap-1 sm:flex">
+        <div className="hidden items-center gap-1 lg:flex">
           <ul className="flex items-center gap-1 rounded-full bg-stone-100/80 p-1 border border-stone-200/60" role="list">
             {NAV_LINKS.map(({ href, label }) => {
               const isActive = pathname === href;
@@ -123,7 +133,7 @@ export default function Header() {
                 <li key={href}>
                   <Link
                     href={href}
-                    className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+                    className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                       isActive
                         ? "bg-white text-stone-900 shadow-xs border border-stone-200/80 font-semibold"
                         : "text-stone-600 hover:text-stone-950 hover:bg-white/60"
@@ -138,7 +148,7 @@ export default function Header() {
         </div>
 
         {/* Intelligent Live Status Indicator */}
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <div className="flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/70 px-2.5 py-1 text-[11px] font-medium text-emerald-800">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
@@ -149,7 +159,7 @@ export default function Header() {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="flex sm:hidden">
+        <div className="flex lg:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -172,7 +182,7 @@ export default function Header() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="border-t border-stone-200 bg-white/95 px-4 pt-3 pb-4 sm:hidden shadow-lg backdrop-blur-md animate-in fade-in duration-150">
+        <div className="border-t border-stone-200 bg-white/95 px-4 pt-3 pb-4 lg:hidden shadow-lg backdrop-blur-md animate-in fade-in duration-150">
           <div className="mb-2 flex items-center justify-between px-1 text-[11px] font-medium text-stone-500 uppercase tracking-wider">
             <span>Tools &amp; Guides</span>
             <span className="text-emerald-700 font-semibold">100% Free</span>
@@ -235,7 +245,7 @@ export default function Header() {
           <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 px-1">
             <span className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-              Live Fee Rules
+              <span>Live Fee Rules</span>
             </span>
             <span>No sign-up required</span>
           </div>

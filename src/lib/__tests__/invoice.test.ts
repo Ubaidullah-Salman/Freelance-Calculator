@@ -447,3 +447,25 @@ describe("CURRENCIES", () => {
     });
   });
 });
+
+// ============================================================================
+// PDF Generation Tests
+// ============================================================================
+
+import { generateInvoicePdf } from "@/lib/invoice-pdf";
+
+describe("generateInvoicePdf", () => {
+  it("generates a valid jsPDF document without errors", () => {
+    const invoice = createSampleInvoice();
+    const totals = calculateTotals(
+      invoice.lineItems,
+      invoice.discountPercent,
+      invoice.taxPercent,
+      invoice.amountPaid,
+      invoice.currency
+    );
+    const doc = generateInvoicePdf(invoice, totals, "a4");
+    expect(doc).toBeDefined();
+    expect(doc.getNumberOfPages()).toBeGreaterThanOrEqual(1);
+  });
+});

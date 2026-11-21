@@ -85,6 +85,21 @@ const PLATFORM_TOOLS = [
     cta: "Generate Invoice",
     id: "tool-card-invoice",
   },
+  {
+    href: "/time-card-calculator",
+    badge: "Time Card",
+    badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    fee: "Hours & Overtime",
+    title: "Time Card Calculator",
+    subtitle: "Track work hours, breaks, and overtime. Export timesheets as PDF/CSV.",
+    features: [
+      "Multiple work sessions & overnight shifts",
+      "Daily overtime & custom multipliers",
+      "PDF & CSV timesheet export",
+    ],
+    cta: "Calculate Time Card",
+    id: "tool-card-time-card",
+  },
 ];
 
 const TAX_TOOLS = [
