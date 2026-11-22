@@ -42,6 +42,15 @@ export interface ClientDetails {
   taxId: string;
 }
 
+export interface StructuredPaymentDetails {
+  method?: string; // e.g. "Bank Transfer", "Wire", "Wise", "ACH"
+  bankName?: string; // Bank name
+  accountName?: string; // Account holder / beneficiary name
+  accountNumber?: string; // Account number / IBAN
+  routingNumber?: string; // Routing / Sort code / SWIFT / BIC
+  paymentReference?: string; // Reference for the transfer
+}
+
 export interface InvoiceData {
   invoiceNumber: string;
   issueDate: string; // ISO date string
@@ -53,8 +62,10 @@ export interface InvoiceData {
   discountPercent: number; // 0-100
   taxPercent: number; // 0-100, defaults to 0
   notes: string;
-  paymentInstructions: string;
+  paymentInstructions: string; // Preserved free-text instructions
+  paymentDetails?: StructuredPaymentDetails; // Structured payment details
   amountPaid: number; // Amount already paid (major units)
+  includeCredit?: boolean; // Optional credit footer, OFF by default
 }
 
 export interface InvoiceTotals {
@@ -440,11 +451,16 @@ export function formatCurrencyFromMinor(minor: number, currency: CurrencyCode): 
 
 /**
  * Generate a simple invoice number suggestion.
- * Format: INV-YYYYMMDD-XXXX (random 4 digits)
+ * Format: INV-YYYYMMDD-XXXX (random 4 digits).
+ * Uses the issueDate (YYYY-MM-DD) if provided, otherwise current date.
  */
-export function generateInvoiceNumber(): string {
-  const now = new Date();
-  const datePart = now.toISOString().slice(0, 10).replace(/-/g, "");
+export function generateInvoiceNumber(issueDate?: string): string {
+  let datePart: string;
+  if (issueDate && /^\d{4}-\d{2}-\d{2}$/.test(issueDate)) {
+    datePart = issueDate.replace(/-/g, "");
+  } else {
+    datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  }
   const randomPart = Math.floor(1000 + Math.random() * 9000);
   return `INV-${datePart}-${randomPart}`;
 }
@@ -480,7 +496,7 @@ export function createEmptyInvoice(): InvoiceData {
   const today = new Date().toISOString().slice(0, 10);
 
   return {
-    invoiceNumber: generateInvoiceNumber(),
+    invoiceNumber: generateInvoiceNumber(today),
     issueDate: today,
     dueDate: "",
     currency: "USD",
@@ -502,7 +518,16 @@ export function createEmptyInvoice(): InvoiceData {
     taxPercent: 0,
     notes: "",
     paymentInstructions: "",
+    paymentDetails: {
+      method: "",
+      bankName: "",
+      accountName: "",
+      accountNumber: "",
+      routingNumber: "",
+      paymentReference: "",
+    },
     amountPaid: 0,
+    includeCredit: false,
   };
 }
 
@@ -514,7 +539,7 @@ export function createSampleInvoice(): InvoiceData {
   const dueDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
   return {
-    invoiceNumber: "INV-20260119-0001",
+    invoiceNumber: generateInvoiceNumber(today),
     issueDate: today,
     dueDate,
     currency: "USD",
@@ -548,7 +573,16 @@ export function createSampleInvoice(): InvoiceData {
     discountPercent: 0,
     taxPercent: 0,
     notes: "Thank you for your business! Payment is due within 14 days.",
-    paymentInstructions: "Bank Transfer: Bank of Example, Account: 123456789, Routing: 987654321",
+    paymentInstructions: "Please reference the invoice number when submitting payment.",
+    paymentDetails: {
+      method: "Bank Wire / ACH",
+      bankName: "First National Tech Bank",
+      accountName: "Jane Doe Design LLC",
+      accountNumber: "1234567890",
+      routingNumber: "021000021 / SWIFT: FNTBUS33",
+      paymentReference: "INV-SAMPLE-001",
+    },
     amountPaid: 150,
+    includeCredit: false,
   };
 }

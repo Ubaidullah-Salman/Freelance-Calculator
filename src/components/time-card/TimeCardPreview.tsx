@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { CalculatedTimeCardPreview, TimeCardData } from "./types";
 import {
-  CURRENCY_SYMBOLS,
   formatDateReadable,
   formatTime12h,
   getWeekday,
   computeElapsedMinutes,
+  formatMinutes,
+  formatMoney,
   generateTimeCardPdf,
   downloadTimeCardCsv,
 } from "./utils";
@@ -21,7 +22,9 @@ export function TimeCardPreview({
   timeCardData,
   calculatedPreview,
 }: TimeCardPreviewProps) {
-  const [showPayDetails, setShowPayDetails] = useState(true);
+  const [showPayDetails, setShowPayDetails] = useState(
+    timeCardData.includePayDetails ?? true
+  );
   const [isExportingPDF, setIsExportingPDF] = useState(false);
   const [isExportingCSV, setIsExportingCSV] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -34,12 +37,19 @@ export function TimeCardPreview({
         setErrorMessage("Please enter at least one session to export.");
         return;
       }
-      const doc = generateTimeCardPdf(timeCardData, calculatedPreview, showPayDetails, "a4");
-      const safeName = (timeCardData.clientName || "freelancer")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-");
-      doc.save(`timesheet-${safeName}-${timeCardData.payPeriodStartDate || "export"}.pdf`);
-    } catch (error) {
+      const doc = generateTimeCardPdf(timeCardData, calculatedPreview, {
+        includePayDetails: showPayDetails,
+        includeSignatures: Boolean(timeCardData.includeSignatures),
+        includeCredit: Boolean(timeCardData.includeCredit),
+        paperSize: "a4",
+      });
+      const baseName =
+        [timeCardData.workerName, timeCardData.clientName, timeCardData.projectName]
+          .filter(Boolean)
+          .join("-") || "timesheet";
+      const safeName = baseName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      doc.save(`timesheet-${safeName || "export"}-${timeCardData.payPeriodStartDate || "period"}.pdf`);
+    } catch {
       setErrorMessage("PDF generation failed. Please check inputs.");
     } finally {
       setIsExportingPDF(false);
@@ -54,22 +64,20 @@ export function TimeCardPreview({
         setErrorMessage("Please enter at least one session to export.");
         return;
       }
-      downloadTimeCardCsv(timeCardData, calculatedPreview, showPayDetails);
-    } catch (error) {
+      downloadTimeCardCsv(timeCardData, calculatedPreview, {
+        includePayDetails: showPayDetails,
+        format: timeCardData.csvFormat || "data_only",
+      });
+    } catch {
       setErrorMessage("CSV generation failed. Please check inputs.");
     } finally {
       setIsExportingCSV(false);
     }
   };
 
-  const formatHhMm = (decimalHours: number) => {
-    const totalMinutes = Math.max(0, Math.round(decimalHours * 60));
-    const h = Math.floor(totalMinutes / 60);
-    const m = totalMinutes % 60;
-    return `${h}h ${m}m`;
-  };
-
-  const curSymbol = CURRENCY_SYMBOLS[timeCardData.currency] || "$";
+  const isBilling = timeCardData.rateType === "billing";
+  const rateLabel = isBilling ? "Client Billing Rate" : "Worker Pay Rate";
+  const totalPayLabel = isBilling ? "Total Estimated Client Billing" : "Total Estimated Gross Pay";
 
   return (
     <div className="rounded-xl border border-stone-200 bg-white shadow-sm overflow-hidden">
@@ -92,7 +100,7 @@ export function TimeCardPreview({
             id="toggle-pay-details"
             type="button"
             onClick={() => setShowPayDetails(!showPayDetails)}
-            className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 ${
+            className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 cursor-pointer ${
               showPayDetails ? "bg-emerald-600" : "bg-stone-300"
             }`}
             aria-label="Toggle show pay details"
@@ -107,23 +115,48 @@ export function TimeCardPreview({
       </div>
 
       {/* Main Preview Container */}
-      <div className="p-5 sm:p-6 space-y-6">
-        {/* Document Meta Header */}
+      <div className="p-5 sm:p-6 space-y-5">
+        {/* Document Meta Header (omitting empty optional fields) */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-stone-100 pb-4">
           <div>
-            <h3 className="text-lg font-bold text-stone-900">
+            <h3 className="text-lg font-bold text-stone-900 tracking-tight">
               TIMESHEET
             </h3>
-            <p className="text-xs text-stone-500 mt-0.5">
-              Client: <strong className="text-stone-800 font-semibold">{timeCardData.clientName || "General / Independent"}</strong>
-            </p>
+            {timeCardData.workerName && (
+              <p className="text-xs text-stone-600 mt-0.5">
+                Worker: <strong className="text-stone-900 font-semibold">{timeCardData.workerName}</strong>
+              </p>
+            )}
+            {timeCardData.clientName && (
+              <p className="text-xs text-stone-600 mt-0.5">
+                Client: <strong className="text-stone-900 font-semibold">{timeCardData.clientName}</strong>
+              </p>
+            )}
+            {timeCardData.projectName && (
+              <p className="text-xs text-stone-600 mt-0.5">
+                Project: <strong className="text-stone-900 font-semibold">{timeCardData.projectName}</strong>
+              </p>
+            )}
           </div>
 
           <div className="sm:text-right">
-            <div className="text-[11px] text-stone-500">Pay Period Start</div>
+            <div className="text-[11px] text-stone-500 font-medium uppercase tracking-wider">Reporting Period</div>
             <div className="text-sm font-semibold text-stone-900">
-              {formatDateReadable(timeCardData.payPeriodStartDate) || "—"}
+              {timeCardData.payPeriodStartDate ? (
+                timeCardData.payPeriodEndDate ? (
+                  `${formatDateReadable(timeCardData.payPeriodStartDate)} – ${formatDateReadable(timeCardData.payPeriodEndDate)}`
+                ) : (
+                  formatDateReadable(timeCardData.payPeriodStartDate)
+                )
+              ) : (
+                "—"
+              )}
             </div>
+            {showPayDetails && timeCardData.hourlyRate > 0 && (
+              <div className="text-xs text-stone-600 mt-1">
+                {rateLabel}: <strong className="text-stone-900">{formatMoney(timeCardData.hourlyRate, timeCardData.currency)}/hr</strong>
+              </div>
+            )}
           </div>
         </div>
 
@@ -135,7 +168,7 @@ export function TimeCardPreview({
             </span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-xl font-bold text-stone-900">
-                {formatHhMm(calculatedPreview.totalWorkedHours)}
+                {formatMinutes(calculatedPreview.totalElapsedMinutes)}
               </span>
               <span className="text-xs text-stone-400">
                 ({calculatedPreview.totalWorkedHours.toFixed(2)}h)
@@ -149,7 +182,7 @@ export function TimeCardPreview({
             </span>
             <div className="flex items-baseline gap-1.5 text-stone-700">
               <span className="text-xl font-bold">
-                - {formatHhMm(calculatedPreview.unpaidBreakHours)}
+                {formatMinutes(calculatedPreview.totalBreakMinutes)}
               </span>
               <span className="text-xs text-stone-400">
                 ({calculatedPreview.unpaidBreakHours.toFixed(2)}h)
@@ -159,24 +192,24 @@ export function TimeCardPreview({
 
           <div className="rounded-lg bg-emerald-50/70 p-3.5 border border-emerald-200">
             <span className="block text-[11px] font-bold text-emerald-800 uppercase tracking-wider mb-0.5">
-              Net Worked Hours
+              Net Worked Time
             </span>
             <div className="flex items-baseline gap-1.5 text-emerald-950">
               <span className="text-xl font-extrabold">
-                {formatHhMm(calculatedPreview.netWorkedHours)}
+                {formatMinutes(calculatedPreview.totalWorkedMinutes)}
               </span>
               <span className="text-xs text-emerald-700 font-semibold">
-                ({calculatedPreview.netWorkedHours.toFixed(2)}h)
+                ({calculatedPreview.netWorkedHours.toFixed(2)}h billed)
               </span>
             </div>
           </div>
         </div>
 
-        {/* Sessions Table Breakdown */}
+        {/* Sessions Table Breakdown (without unnecessary row number column) */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-600">
             <span>Shift Breakdown ({timeCardData.sessions.length})</span>
-            <span>Total: {calculatedPreview.netWorkedHours.toFixed(2)} hrs</span>
+            <span>Total: {formatMinutes(calculatedPreview.totalWorkedMinutes)} ({calculatedPreview.netWorkedHours.toFixed(2)} hrs)</span>
           </div>
 
           <div className="rounded-lg border border-stone-200 overflow-x-auto">
@@ -186,7 +219,8 @@ export function TimeCardPreview({
                   <th className="py-2.5 px-3">Date</th>
                   <th className="py-2.5 px-2">Shift</th>
                   <th className="py-2.5 px-2 text-center">Break</th>
-                  <th className="py-2.5 px-3 text-right">Net Hours</th>
+                  <th className="py-2.5 px-3 text-right">Worked Time</th>
+                  <th className="py-2.5 px-3">Task / Description</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -199,16 +233,11 @@ export function TimeCardPreview({
 
                   return (
                     <tr key={session.id || idx} className={idx % 2 === 1 ? "bg-stone-50/50" : ""}>
-                      <td className="py-2.5 px-3">
+                      <td className="py-2.5 px-3 whitespace-nowrap">
                         <div className="font-semibold text-stone-900">
                           {session.date ? formatDateReadable(session.date) : `Session ${idx + 1}`}
                           {weekday && <span className="ml-1 text-[11px] font-normal text-stone-500">({weekday})</span>}
                         </div>
-                        {session.comment && (
-                          <div className="text-[11px] text-stone-500 truncate max-w-[180px] sm:max-w-xs mt-0.5">
-                            {session.comment}
-                          </div>
-                        )}
                       </td>
                       <td className="py-2.5 px-2 text-stone-700 whitespace-nowrap">
                         {formatTime12h(session.startTime)} – {formatTime12h(session.endTime)}
@@ -218,11 +247,14 @@ export function TimeCardPreview({
                           </span>
                         )}
                       </td>
-                      <td className="py-2.5 px-2 text-center text-stone-600">
-                        {breakM > 0 ? `${breakM}m` : "—"}
+                      <td className="py-2.5 px-2 text-center text-stone-600 whitespace-nowrap">
+                        {breakM > 0 ? `${breakM}m` : "0m"}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-bold text-stone-900 tabular-nums">
-                        {netH} hrs
+                      <td className="py-2.5 px-3 text-right font-bold text-stone-900 tabular-nums whitespace-nowrap">
+                        {formatMinutes(netM)} <span className="font-normal text-stone-500 text-[11px]">({netH}h)</span>
+                      </td>
+                      <td className="py-2.5 px-3 text-stone-600">
+                        {session.comment || "—"}
                       </td>
                     </tr>
                   );
@@ -233,24 +265,24 @@ export function TimeCardPreview({
         </div>
 
         {/* Pay Calculation (if toggled) */}
-        {showPayDetails && (
+        {showPayDetails && timeCardData.hourlyRate > 0 && (
           <div className="rounded-lg border border-stone-200 bg-stone-50/60 p-4 space-y-3">
             <div className="flex items-center justify-between border-b border-stone-200/80 pb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                Pay Calculation ({timeCardData.currency})
+                {isBilling ? "Client Billing Calculation" : "Gross Pay Calculation"}
               </span>
               <span className="text-xs text-stone-600">
-                Rate: <strong>{curSymbol}{timeCardData.hourlyRate.toFixed(2)}/hr</strong>
+                {rateLabel}: <strong>{formatMoney(timeCardData.hourlyRate, timeCardData.currency)}/hr</strong>
               </span>
             </div>
 
             <div className="space-y-1.5 text-xs">
               <div className="flex justify-between text-stone-600">
                 <span>
-                  Regular Hours ({(calculatedPreview.netWorkedHours - calculatedPreview.overtimeApplied).toFixed(2)} hrs)
+                  {isBilling ? "Regular Hours" : "Regular Hours"} ({(calculatedPreview.netWorkedHours - calculatedPreview.overtimeApplied).toFixed(2)} hrs)
                 </span>
                 <span className="font-semibold text-stone-900 tabular-nums">
-                  {curSymbol}{calculatedPreview.grossPay.toFixed(2)}
+                  {formatMoney(calculatedPreview.grossPay, timeCardData.currency)}
                 </span>
               </div>
 
@@ -260,16 +292,26 @@ export function TimeCardPreview({
                     Overtime ({calculatedPreview.overtimeApplied.toFixed(2)} hrs @ {calculatedPreview.overtimeMultiplier}x)
                   </span>
                   <span className="font-semibold tabular-nums">
-                    + {curSymbol}{calculatedPreview.overtimePay.toFixed(2)}
+                    + {formatMoney(calculatedPreview.overtimePay, timeCardData.currency)}
                   </span>
                 </div>
               )}
 
               <div className="border-t border-stone-200 pt-2 flex justify-between items-center text-sm font-bold text-emerald-900">
-                <span>Total Estimated Pay</span>
+                <span>{totalPayLabel}</span>
                 <span className="text-base tabular-nums">
-                  {curSymbol}{calculatedPreview.totalPay.toFixed(2)} {timeCardData.currency}
+                  {formatMoney(calculatedPreview.totalPay, timeCardData.currency)}
                 </span>
+              </div>
+
+              <div className="text-[11px] text-stone-500 pt-1">
+                {timeCardData.overtimeThreshold > 0 && timeCardData.overtimeMultiplier > 1
+                  ? `Overtime: ${timeCardData.overtimeMultiplier}x after ${timeCardData.overtimeThreshold.toFixed(1)} hrs/period.`
+                  : "Overtime: None / standard rate for all hours."}
+                {" "}
+                {isBilling
+                  ? "Estimates exclude applicable sales taxes, client fees, and reimbursable expenses."
+                  : "Estimates represent gross earnings and exclude taxes, withholdings, and deductions."}
               </div>
             </div>
           </div>

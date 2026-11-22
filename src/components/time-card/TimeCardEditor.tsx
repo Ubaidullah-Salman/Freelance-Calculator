@@ -37,7 +37,10 @@ export function TimeCardEditor({
   // Auto-save indicator
   useEffect(() => {
     if (isAutoSave) {
-      setLastSaved(new Date());
+      const timer = setTimeout(() => {
+        setLastSaved(new Date());
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [timeCardData, isAutoSave]);
 
@@ -50,7 +53,6 @@ export function TimeCardEditor({
   };
 
   const handleAddSession = () => {
-    // Default next session date to last session date or today
     const lastSession = timeCardData.sessions[timeCardData.sessions.length - 1];
     let nextDate = new Date().toISOString().split("T")[0];
     if (lastSession?.date) {
@@ -125,12 +127,19 @@ export function TimeCardEditor({
         setExportError("Please add at least one work session before exporting.");
         return;
       }
-      const doc = generateTimeCardPdf(timeCardData, calculatedPreview, true, paperSize);
-      const safeName = (timeCardData.clientName || "freelancer")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-");
-      doc.save(`timesheet-${safeName}-${timeCardData.payPeriodStartDate || "export"}.pdf`);
-    } catch (err) {
+      const doc = generateTimeCardPdf(timeCardData, calculatedPreview, {
+        includePayDetails: timeCardData.includePayDetails ?? true,
+        includeSignatures: Boolean(timeCardData.includeSignatures),
+        includeCredit: Boolean(timeCardData.includeCredit),
+        paperSize,
+      });
+      const baseName =
+        [timeCardData.workerName, timeCardData.clientName, timeCardData.projectName]
+          .filter(Boolean)
+          .join("-") || "timesheet";
+      const safeName = baseName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      doc.save(`timesheet-${safeName || "export"}-${timeCardData.payPeriodStartDate || "period"}.pdf`);
+    } catch {
       setExportError("Failed to generate PDF. Please check your session inputs.");
     }
   };
@@ -142,8 +151,11 @@ export function TimeCardEditor({
         setExportError("Please add at least one work session before exporting.");
         return;
       }
-      downloadTimeCardCsv(timeCardData, calculatedPreview, true);
-    } catch (err) {
+      downloadTimeCardCsv(timeCardData, calculatedPreview, {
+        includePayDetails: timeCardData.includePayDetails ?? true,
+        format: timeCardData.csvFormat || "data_only",
+      });
+    } catch {
       setExportError("Failed to export CSV. Please check your session inputs.");
     }
   };
@@ -159,7 +171,7 @@ export function TimeCardEditor({
             Time Card Editor
           </h2>
           <p className="text-xs text-stone-500 mt-0.5">
-            Record shifts, breaks, and calculate gross billings
+            Record shifts, breaks, and calculate work hours & pay
           </p>
         </div>
 
@@ -203,22 +215,23 @@ export function TimeCardEditor({
           <button
             type="button"
             onClick={handleLoadSample}
-            className="rounded border border-stone-200 bg-white px-2.5 py-1 font-medium text-stone-700 hover:bg-stone-100 transition-colors shadow-2xs"
+            className="rounded border border-stone-200 bg-white px-2.5 py-1 font-medium text-stone-700 hover:bg-stone-100 transition-colors shadow-2xs cursor-pointer"
           >
             Load 5-Day Sample
           </button>
           <button
             type="button"
             onClick={handleClearAll}
-            className="rounded border border-stone-200 bg-white px-2.5 py-1 font-medium text-stone-600 hover:text-rose-600 hover:bg-rose-50 transition-colors shadow-2xs"
+            className="rounded border border-stone-200 bg-white px-2.5 py-1 font-medium text-stone-600 hover:text-rose-600 hover:bg-rose-50 transition-colors shadow-2xs cursor-pointer"
           >
             Clear All
           </button>
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="text-[11px] text-stone-500 font-medium">Paper:</label>
+          <label htmlFor="tc-paperSize" className="text-[11px] text-stone-500 font-medium">Paper:</label>
           <select
+            id="tc-paperSize"
             value={paperSize}
             onChange={(e) => setPaperSize(e.target.value as "a4" | "letter")}
             className="rounded border border-stone-200 bg-white px-2 py-0.5 text-xs text-stone-700 focus:border-emerald-500 focus:outline-none"
@@ -239,19 +252,36 @@ export function TimeCardEditor({
         </div>
       )}
 
-      {/* Project & Client Settings */}
+      {/* Worker, Client, and Reporting Period Settings */}
       <div className="rounded-lg border border-stone-200/90 bg-stone-50/40 p-4 space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-wider text-stone-600">
-          Project & Pay Period
+          Worker, Client & Reporting Period
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label
+              htmlFor="tc-workerName"
+              className="block text-xs font-semibold text-stone-700 mb-1"
+            >
+              Worker Name (optional)
+            </label>
+            <input
+              id="tc-workerName"
+              type="text"
+              value={timeCardData.workerName || ""}
+              onChange={(e) => onUpdate({ workerName: e.target.value })}
+              className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              placeholder="e.g., Alex Morgan"
+            />
+          </div>
+
           <div>
             <label
               htmlFor="tc-clientName"
               className="block text-xs font-semibold text-stone-700 mb-1"
             >
-              Client / Project Name
+              Client Name
             </label>
             <input
               id="tc-clientName"
@@ -259,16 +289,35 @@ export function TimeCardEditor({
               value={timeCardData.clientName}
               onChange={(e) => onUpdate({ clientName: e.target.value })}
               className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-              placeholder="e.g., Acme Studio, Freelance Contract"
+              placeholder="e.g., Acme Studio"
             />
           </div>
 
           <div>
             <label
+              htmlFor="tc-projectName"
+              className="block text-xs font-semibold text-stone-700 mb-1"
+            >
+              Project Name (optional)
+            </label>
+            <input
+              id="tc-projectName"
+              type="text"
+              value={timeCardData.projectName || ""}
+              onChange={(e) => onUpdate({ projectName: e.target.value })}
+              className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              placeholder="e.g., Web App Refactor"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1 border-t border-stone-200/60">
+          <div>
+            <label
               htmlFor="tc-payPeriodStartDate"
               className="block text-xs font-semibold text-stone-700 mb-1"
             >
-              Pay Period Start Date
+              Period Start Date *
             </label>
             <input
               id="tc-payPeriodStartDate"
@@ -278,9 +327,46 @@ export function TimeCardEditor({
               className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
+
+          <div>
+            <label
+              htmlFor="tc-payPeriodEndDate"
+              className="block text-xs font-semibold text-stone-700 mb-1"
+            >
+              Period End Date (optional)
+            </label>
+            <input
+              id="tc-payPeriodEndDate"
+              type="date"
+              value={timeCardData.payPeriodEndDate || ""}
+              onChange={(e) => onUpdate({ payPeriodEndDate: e.target.value })}
+              className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+        {/* Hourly Rate & Rate Classification */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1 border-t border-stone-200/60">
+          <div>
+            <label
+              htmlFor="tc-rateType"
+              className="block text-xs font-semibold text-stone-700 mb-1"
+            >
+              Rate Classification
+            </label>
+            <select
+              id="tc-rateType"
+              value={timeCardData.rateType || "pay"}
+              onChange={(e) =>
+                onUpdate({ rateType: e.target.value as "pay" | "billing" })
+              }
+              className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            >
+              <option value="pay">Worker Gross Pay Rate</option>
+              <option value="billing">Client Billing Rate</option>
+            </select>
+          </div>
+
           <div>
             <label
               htmlFor="tc-currency"
@@ -340,7 +426,7 @@ export function TimeCardEditor({
             Work Sessions ({timeCardData.sessions.length})
           </label>
           <span className="text-xs text-stone-500">
-            Net Worked: <strong className="text-emerald-700 font-semibold">{calculatedPreview.netWorkedHours.toFixed(2)} hrs</strong>
+            Net Worked: <strong className="text-emerald-700 font-semibold">{calculatedPreview.netWorkedHours.toFixed(2)} hrs</strong> ({formatMinutes(calculatedPreview.totalWorkedMinutes)})
           </span>
         </div>
 
@@ -357,9 +443,6 @@ export function TimeCardEditor({
               {/* Session Header */}
               <div className="flex items-center justify-between border-b border-stone-100 pb-2">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-stone-900 text-[10px] font-bold text-white">
-                    {index + 1}
-                  </span>
                   <span className="text-xs font-semibold text-stone-800">
                     Session {index + 1}
                   </span>
@@ -372,7 +455,7 @@ export function TimeCardEditor({
                   <button
                     type="button"
                     onClick={() => handleRemoveSession(index)}
-                    className="text-xs font-medium text-stone-400 hover:text-rose-600 transition-colors"
+                    className="text-xs font-medium text-stone-400 hover:text-rose-600 transition-colors cursor-pointer"
                     aria-label={`Remove session ${index + 1}`}
                   >
                     Remove
@@ -477,7 +560,7 @@ export function TimeCardEditor({
         <button
           type="button"
           onClick={handleAddSession}
-          className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50/80 py-2.5 text-xs font-semibold text-stone-700 hover:border-emerald-500 hover:bg-emerald-50/40 hover:text-emerald-800 transition-colors"
+          className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50/80 py-2.5 text-xs font-semibold text-stone-700 hover:border-emerald-500 hover:bg-emerald-50/40 hover:text-emerald-800 transition-colors cursor-pointer"
         >
           + Add Work Session
         </button>
@@ -513,7 +596,7 @@ export function TimeCardEditor({
               min="0"
             />
             <span className="block text-[11px] text-stone-400 mt-1">
-              Hours above this threshold are billed at the overtime rate.
+              Hours above this threshold are billed at the overtime multiplier.
             </span>
           </div>
 
@@ -542,6 +625,60 @@ export function TimeCardEditor({
             <span className="block text-[11px] text-stone-400 mt-1">
               Default is 1.5x (time-and-a-half).
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Export Options & Settings */}
+      <div className="rounded-lg border border-stone-200/90 bg-stone-50/40 p-4 space-y-3">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-stone-600">
+          Export Preferences & Options
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <label className="flex items-center gap-2 text-xs text-stone-700 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={timeCardData.includePayDetails ?? true}
+              onChange={(e) => onUpdate({ includePayDetails: e.target.checked })}
+              className="rounded border-stone-300 text-emerald-600 focus:ring-emerald-500"
+            />
+            <span>Include pay & financial calculations</span>
+          </label>
+
+          <label className="flex items-center gap-2 text-xs text-stone-700 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={Boolean(timeCardData.includeSignatures)}
+              onChange={(e) => onUpdate({ includeSignatures: e.target.checked })}
+              className="rounded border-stone-300 text-emerald-600 focus:ring-emerald-500"
+            />
+            <span>Include signature blocks on PDF</span>
+          </label>
+
+          <label className="flex items-center gap-2 text-xs text-stone-700 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={Boolean(timeCardData.includeCredit)}
+              onChange={(e) => onUpdate({ includeCredit: e.target.checked })}
+              className="rounded border-stone-300 text-emerald-600 focus:ring-emerald-500"
+            />
+            <span>Include FreelanceCalc credit footer</span>
+          </label>
+
+          <div className="flex items-center gap-2">
+            <label htmlFor="tc-csvFormat" className="text-xs text-stone-600 font-medium">CSV Format:</label>
+            <select
+              id="tc-csvFormat"
+              value={timeCardData.csvFormat || "data_only"}
+              onChange={(e) =>
+                onUpdate({ csvFormat: e.target.value as "data_only" | "with_summary" })
+              }
+              className="rounded border border-stone-200 bg-white px-2 py-1 text-xs text-stone-700 focus:border-emerald-500 focus:outline-none"
+            >
+              <option value="data_only">Data only (Default rectangular table)</option>
+              <option value="with_summary">With metadata & totals summary</option>
+            </select>
           </div>
         </div>
       </div>

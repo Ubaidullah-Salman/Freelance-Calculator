@@ -22,6 +22,7 @@ import {
   type LineItem,
   type InvoiceData,
 } from "@/lib/invoice";
+import { generateInvoicePdf } from "@/lib/invoice-pdf";
 
 // ============================================================================
 // Money Math Tests
@@ -301,9 +302,14 @@ describe("formatCurrencyFromMinor", () => {
 });
 
 describe("generateInvoiceNumber", () => {
-  it("generates invoice number in correct format", () => {
+  it("generates invoice number with current date when no date provided", () => {
     const num = generateInvoiceNumber();
     expect(num).toMatch(/^INV-\d{8}-\d{4}$/);
+  });
+
+  it("generates invoice number based on provided issueDate", () => {
+    const num = generateInvoiceNumber("2026-03-15");
+    expect(num).toMatch(/^INV-20260315-\d{4}$/);
   });
 });
 
@@ -334,7 +340,7 @@ describe("generatePdfFilename", () => {
 // ============================================================================
 
 describe("createEmptyInvoice", () => {
-  it("creates valid empty invoice structure", () => {
+  it("creates valid empty invoice structure with default values", () => {
     const invoice = createEmptyInvoice();
     expect(invoice.invoiceNumber).toMatch(/^INV-\d{8}-\d{4}$/);
     expect(invoice.issueDate).toBeDefined();
@@ -343,17 +349,21 @@ describe("createEmptyInvoice", () => {
     expect(invoice.discountPercent).toBe(0);
     expect(invoice.taxPercent).toBe(0);
     expect(invoice.amountPaid).toBe(0);
+    expect(invoice.includeCredit).toBe(false);
+    expect(invoice.paymentDetails).toBeDefined();
   });
 });
 
 describe("createSampleInvoice", () => {
-  it("creates valid sample invoice", () => {
+  it("creates valid sample invoice with dynamic invoice date", () => {
     const invoice = createSampleInvoice();
     const errors = validateInvoice(invoice);
     expect(errors).toEqual([]);
     expect(invoice.lineItems.length).toBe(2);
     expect(invoice.freelancer.name).toBe("Jane Doe Design");
     expect(invoice.client.name).toBe("Acme Corporation");
+    expect(invoice.paymentDetails?.method).toBe("Bank Wire / ACH");
+    expect(invoice.includeCredit).toBe(false);
   });
 
   it("sample invoice calculates correctly", () => {
@@ -452,8 +462,6 @@ describe("CURRENCIES", () => {
 // PDF Generation Tests
 // ============================================================================
 
-import { generateInvoicePdf } from "@/lib/invoice-pdf";
-
 describe("generateInvoicePdf", () => {
   it("generates a valid jsPDF document without errors", () => {
     const invoice = createSampleInvoice();
@@ -467,5 +475,64 @@ describe("generateInvoicePdf", () => {
     const doc = generateInvoicePdf(invoice, totals, "a4");
     expect(doc).toBeDefined();
     expect(doc.getNumberOfPages()).toBeGreaterThanOrEqual(1);
+  });
+
+  it("generates PDF with optional credit enabled", () => {
+    const invoice = {
+      ...createSampleInvoice(),
+      includeCredit: true,
+    };
+    const totals = calculateTotals(
+      invoice.lineItems,
+      invoice.discountPercent,
+      invoice.taxPercent,
+      invoice.amountPaid,
+      invoice.currency
+    );
+    const doc = generateInvoicePdf(invoice, totals, "letter");
+    expect(doc).toBeDefined();
+  });
+
+  it("generates PDF for fully paid invoices", () => {
+    const sample = createSampleInvoice();
+    const invoice: InvoiceData = {
+      ...sample,
+      amountPaid: 650, // Full payment of $650
+    };
+    const totals = calculateTotals(
+      invoice.lineItems,
+      invoice.discountPercent,
+      invoice.taxPercent,
+      invoice.amountPaid,
+      invoice.currency
+    );
+    expect(totals.balanceDue).toBe(0);
+    const doc = generateInvoicePdf(invoice, totals, "a4");
+    expect(doc).toBeDefined();
+  });
+
+  it("generates multi-page PDF with long item lists and long payment instructions", () => {
+    const manyItems: LineItem[] = Array.from({ length: 30 }, (_, i) => ({
+      id: `item-${i}`,
+      description: `Detailed project milestone and deliverables item ${i + 1} with extra descriptive text`,
+      quantity: 2,
+      rate: 100,
+    }));
+    const invoice: InvoiceData = {
+      ...createSampleInvoice(),
+      lineItems: manyItems,
+      paymentInstructions: "Please send funds via wire transfer with memo referencing invoice.\nAdditional multi-line instruction 1.\nAdditional multi-line instruction 2.",
+      notes: "Standard terms and conditions apply. Invoices unpaid after 30 days are subject to interest.",
+    };
+    const totals = calculateTotals(
+      invoice.lineItems,
+      invoice.discountPercent,
+      invoice.taxPercent,
+      invoice.amountPaid,
+      invoice.currency
+    );
+    const doc = generateInvoicePdf(invoice, totals, "a4");
+    expect(doc).toBeDefined();
+    expect(doc.getNumberOfPages()).toBeGreaterThan(1);
   });
 });

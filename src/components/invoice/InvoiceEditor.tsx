@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import type { InvoiceData, ClientDetails, FreelancerDetails, LineItem, CurrencyCode } from "@/lib/invoice";
+import type { InvoiceData, ClientDetails, FreelancerDetails, LineItem, CurrencyCode, StructuredPaymentDetails } from "@/lib/invoice";
 import {
   CURRENCIES,
   calculateTotals,
@@ -16,7 +16,6 @@ import {
   importDraftJSON,
   createEmptyInvoice,
   createSampleInvoice,
-  toMajorUnits,
   sanitizeFilename,
   generatePdfFilename,
 } from "@/lib/invoice";
@@ -102,6 +101,15 @@ export default function InvoiceEditor({
   const updateClient = (field: keyof ClientDetails, value: string) =>
     setInvoice((prev) => ({ ...prev, client: { ...prev.client, [field]: value } }));
 
+  const updatePaymentDetail = (field: keyof StructuredPaymentDetails, value: string) =>
+    setInvoice((prev) => ({
+      ...prev,
+      paymentDetails: {
+        ...(prev.paymentDetails || {}),
+        [field]: value,
+      },
+    }));
+
   const addLineItem = () =>
     setInvoice((prev) => ({
       ...prev,
@@ -123,7 +131,6 @@ export default function InvoiceEditor({
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    // Validate file type and size (max 2MB)
     if (!file.type.match(/^image\/(png|jpeg|jpg)$/)) {
       alert("Please upload a PNG or JPEG image.");
       return;
@@ -140,7 +147,6 @@ export default function InvoiceEditor({
       }));
     };
     reader.readAsDataURL(file);
-    // Reset input so same file can be re-selected
     e.target.value = "";
   };
 
@@ -218,7 +224,6 @@ export default function InvoiceEditor({
     e.target.value = "";
   };
 
-  // Amount paid validation
   const amountPaidExcess = checkAmountPaidExcess(
     invoice.lineItems,
     invoice.discountPercent,
@@ -294,18 +299,30 @@ export default function InvoiceEditor({
         </div>
       )}
 
-      {/* Download bar */}
-      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-stone-600">Paper size:</label>
-          <select
-            value={paperSize}
-            onChange={(e) => setPaperSize(e.target.value as "a4" | "letter")}
-            className="text-xs rounded-md border border-stone-200 bg-white px-2 py-1"
-          >
-            <option value="a4">A4</option>
-            <option value="letter">US Letter</option>
-          </select>
+      {/* Download and Options bar */}
+      <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <label htmlFor="invoice-paper-size" className="text-xs text-stone-600">Paper size:</label>
+            <select
+              id="invoice-paper-size"
+              value={paperSize}
+              onChange={(e) => setPaperSize(e.target.value as "a4" | "letter")}
+              className="text-xs rounded-md border border-stone-200 bg-white px-2 py-1"
+            >
+              <option value="a4">A4</option>
+              <option value="letter">US Letter</option>
+            </select>
+          </div>
+          <label className="flex items-center gap-1.5 text-xs text-stone-700 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={Boolean(invoice.includeCredit)}
+              onChange={(e) => setInvoice((prev) => ({ ...prev, includeCredit: e.target.checked }))}
+              className="rounded border-stone-300 text-emerald-600 focus:ring-emerald-500"
+            />
+            Include FreelanceCalc credit
+          </label>
         </div>
         <button
           type="button"
@@ -418,14 +435,19 @@ export default function InvoiceEditor({
       {/* Invoice Details */}
       <SectionCard title="Invoice Details" isOpen={openSections.details} onToggle={() => toggleSection("details")}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <TextField
-            id="invoice-number"
-            label="Invoice Number *"
-            value={invoice.invoiceNumber}
-            onChange={(v) => setInvoice((prev) => ({ ...prev, invoiceNumber: v }))}
-            placeholder="INV-001"
-            required
-          />
+          <div className="flex flex-col gap-1.5">
+            <TextField
+              id="invoice-number"
+              label="Invoice Number *"
+              value={invoice.invoiceNumber}
+              onChange={(v) => setInvoice((prev) => ({ ...prev, invoiceNumber: v }))}
+              placeholder="INV-001"
+              required
+            />
+            <p className="text-[11px] text-stone-500">
+              Automatic numbering is device-local, not globally unique. You can edit this number anytime.
+            </p>
+          </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="invoice-currency" className="text-sm font-medium text-stone-800">Currency</label>
             <select
@@ -462,8 +484,8 @@ export default function InvoiceEditor({
         <div className="space-y-3">
           <div className="grid grid-cols-12 gap-2 text-xs font-medium text-stone-500 uppercase tracking-wider pb-1">
             <span className="col-span-5 sm:col-span-6">Description</span>
-            <span className="col-span-3 sm:col-span-2">Qty</span>
-            <span className="col-span-3 sm:col-span-2">Rate</span>
+            <span className="col-span-3 sm:col-span-2 text-right">Qty</span>
+            <span className="col-span-3 sm:col-span-2 text-right">Rate</span>
             <span className="col-span-4 sm:col-span-2 text-right">Amount</span>
           </div>
           {invoice.lineItems.map((item, idx) => {
@@ -652,10 +674,76 @@ export default function InvoiceEditor({
         </div>
       </SectionCard>
 
-      {/* Notes */}
+      {/* Notes & Payment Details */}
       <SectionCard title="Notes & Payment Details" isOpen={openSections.notes} onToggle={() => toggleSection("notes")}>
         <div className="space-y-4">
-          <div className="flex flex-col gap-1.5">
+          {/* Structured Payment Details */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold text-stone-700 uppercase tracking-wider">Payment Details (Optional)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <TextField
+                id="payment-method"
+                label="Payment Method"
+                value={invoice.paymentDetails?.method || ""}
+                onChange={(v) => updatePaymentDetail("method", v)}
+                placeholder="e.g. Bank Transfer, Wire, ACH, Wise"
+              />
+              <TextField
+                id="payment-bank"
+                label="Bank Name"
+                value={invoice.paymentDetails?.bankName || ""}
+                onChange={(v) => updatePaymentDetail("bankName", v)}
+                placeholder="e.g. Chase Bank, Barclays"
+              />
+              <TextField
+                id="payment-account-name"
+                label="Account Holder / Beneficiary"
+                value={invoice.paymentDetails?.accountName || ""}
+                onChange={(v) => updatePaymentDetail("accountName", v)}
+                placeholder="e.g. Jane Doe or Business Name"
+              />
+              <TextField
+                id="payment-account-number"
+                label="Account Number / IBAN"
+                value={invoice.paymentDetails?.accountNumber || ""}
+                onChange={(v) => updatePaymentDetail("accountNumber", v)}
+                placeholder="e.g. 123456789 or GB82..."
+              />
+              <TextField
+                id="payment-routing"
+                label="Routing / Sort Code / SWIFT"
+                value={invoice.paymentDetails?.routingNumber || ""}
+                onChange={(v) => updatePaymentDetail("routingNumber", v)}
+                placeholder="e.g. 021000021 / CHASUS33"
+              />
+              <TextField
+                id="payment-reference"
+                label="Payment Reference"
+                value={invoice.paymentDetails?.paymentReference || ""}
+                onChange={(v) => updatePaymentDetail("paymentReference", v)}
+                placeholder="e.g. INV-001 or Client Code"
+              />
+            </div>
+          </div>
+
+          {/* Free-text instructions */}
+          <div className="flex flex-col gap-1.5 pt-2 border-t border-stone-100">
+            <label htmlFor="invoice-payment-instructions" className="text-sm font-medium text-stone-800">
+              Additional Payment Instructions
+            </label>
+            <textarea
+              id="invoice-payment-instructions"
+              value={invoice.paymentInstructions}
+              onChange={(e) => setInvoice((prev) => ({ ...prev, paymentInstructions: e.target.value }))}
+              placeholder="Additional instructions or notes for receiving payment..."
+              rows={3}
+              className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm focus:border-[#44684f] focus:outline-none focus:ring-1 focus:ring-[#44684f] resize-y"
+            />
+            <p className="text-[10px] text-stone-400">Do not enter payment account passwords or card PIN numbers.</p>
+          </div>
+
+          {/* Notes */}
+          <div className="flex flex-col gap-1.5 pt-2 border-t border-stone-100">
             <label htmlFor="invoice-notes" className="text-sm font-medium text-stone-800">Invoice Notes</label>
             <textarea
               id="invoice-notes"
@@ -665,18 +753,6 @@ export default function InvoiceEditor({
               rows={3}
               className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm focus:border-[#44684f] focus:outline-none focus:ring-1 focus:ring-[#44684f] resize-y"
             />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="invoice-payment-instructions" className="text-sm font-medium text-stone-800">Payment Instructions</label>
-            <textarea
-              id="invoice-payment-instructions"
-              value={invoice.paymentInstructions}
-              onChange={(e) => setInvoice((prev) => ({ ...prev, paymentInstructions: e.target.value }))}
-              placeholder="Bank name, account number, routing number, SWIFT code..."
-              rows={3}
-              className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm focus:border-[#44684f] focus:outline-none focus:ring-1 focus:ring-[#44684f] resize-y"
-            />
-            <p className="text-[10px] text-stone-400">Do not enter payment account passwords or card PIN numbers.</p>
           </div>
         </div>
       </SectionCard>

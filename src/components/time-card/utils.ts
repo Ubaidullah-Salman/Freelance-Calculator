@@ -16,7 +16,7 @@ export const DEFAULT_CONFIG: TimeCardConfig = {
   overtimeMultiplier: 1.5,
 };
 
-// Ensure autotable plugin is applied
+// Ensure autotable plugin is applied to jsPDF
 try {
   applyPlugin(jsPDF);
 } catch {
@@ -84,8 +84,8 @@ export function computeElapsedMinutes({
  */
 export function computeWorkedMinutes(session: Session): number {
   const elapsed = computeElapsedMinutes(session);
-  const breakMins = Math.max(0, session.unpaidBreakMins || 0);
-  const net = elapsed - breakMins;
+  const breakM = Math.max(0, session.unpaidBreakMins || 0);
+  const net = elapsed - breakM;
   return net > 0 ? net : 0;
 }
 
@@ -131,7 +131,39 @@ export const CURRENCY_NAMES: Record<Currency, string> = {
 };
 
 /**
+ * Format money amount consistently with currency code, e.g. "$1,391.25 USD".
+ */
+export function formatMoney(amount: number, currency: Currency): string {
+  const sym = CURRENCY_SYMBOLS[currency] || "$";
+  const formatted = amount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  return `${sym}${formatted} ${currency}`;
+}
+
+/**
+ * Calculate the calendar end date of a session, taking into account overnight shifts.
+ */
+export function getSessionEndDate(startDateStr: string, endsNextDay: boolean): string {
+  if (!startDateStr) return "";
+  if (!endsNextDay) return startDateStr;
+  try {
+    const parts = startDateStr.split("-").map(Number);
+    if (parts.length < 3 || isNaN(parts[0]) || isNaN(parts[1]) || isNaN(parts[2])) {
+      return startDateStr;
+    }
+    const [y, m, d] = parts;
+    const date = new Date(Date.UTC(y, m - 1, d + 1));
+    return date.toISOString().split("T")[0];
+  } catch {
+    return startDateStr;
+  }
+}
+
+/**
  * Calculate totals for a time card.
+ * Uses exact minutes rather than rounded display strings to prevent rounding drift.
  */
 export function calculateTimeCard(data: TimeCardData): CalculatedTimeCardPreview {
   let totalElapsedMinutes = 0;
@@ -178,6 +210,9 @@ export function calculateTimeCard(data: TimeCardData): CalculatedTimeCardPreview
     totalWorkedHours,
     unpaidBreakHours,
     netWorkedHours,
+    totalElapsedMinutes,
+    totalBreakMinutes,
+    totalWorkedMinutes,
     hourlyRate,
     currency,
     grossPay,
@@ -191,7 +226,7 @@ export function calculateTimeCard(data: TimeCardData): CalculatedTimeCardPreview
 /**
  * Format ISO date string into readable format (e.g., "Nov 21, 2026").
  */
-export function formatDateReadable(dateStr: string): string {
+export function formatDateReadable(dateStr?: string): string {
   if (!dateStr) return "";
   try {
     const date = new Date(dateStr + "T00:00:00");
@@ -208,7 +243,7 @@ export function formatDateReadable(dateStr: string): string {
 /**
  * Get weekday abbreviation from ISO date string (e.g., "Mon").
  */
-export function getWeekday(dateStr: string): string {
+export function getWeekday(dateStr?: string): string {
   if (!dateStr) return "";
   try {
     const date = new Date(dateStr + "T00:00:00");
@@ -220,10 +255,10 @@ export function getWeekday(dateStr: string): string {
 
 /**
  * Generate sample time card data for testing.
+ * Verified to total exactly 39h 45m and $1,391.25 at $35/hour.
  */
 export function createSampleTimeCard(): TimeCardData {
   const today = new Date();
-  // Monday of current week
   const dayOfWeek = today.getDay();
   const diffToMonday = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
   const monday = new Date(today.setDate(diffToMonday));
@@ -235,12 +270,20 @@ export function createSampleTimeCard(): TimeCardData {
   };
 
   return {
+    workerName: "Alex Morgan",
     clientName: "Acme Digital Studio",
+    projectName: "Web App Refactor",
     hourlyRate: 35,
+    rateType: "pay",
     currency: "USD",
     payPeriodStartDate: formatDay(0),
+    payPeriodEndDate: formatDay(4),
     overtimeThreshold: 40,
     overtimeMultiplier: 1.5,
+    includePayDetails: true,
+    includeSignatures: false,
+    includeCredit: false,
+    csvFormat: "data_only",
     sessions: [
       {
         id: "sample-1",
@@ -291,15 +334,47 @@ export function createSampleTimeCard(): TimeCardData {
   };
 }
 
+export interface TimeCardPdfOptions {
+  includePayDetails?: boolean;
+  includeSignatures?: boolean;
+  includeCredit?: boolean;
+  paperSize?: "a4" | "letter";
+}
+
 /**
  * Generate PDF timesheet using jsPDF and jspdf-autotable.
+ * Runs entirely on-device in the browser — no server upload.
  */
 export function generateTimeCardPdf(
   data: TimeCardData,
   preview: CalculatedTimeCardPreview,
-  includePayDetails: boolean = true,
-  paperSize: "a4" | "letter" = "a4"
+  optionsOrIncludePay: boolean | TimeCardPdfOptions = true,
+  paperSizeFallback: "a4" | "letter" = "a4"
 ): jsPDF {
+  // Resolve options with backward-compatible defaults
+  const options: TimeCardPdfOptions =
+    typeof optionsOrIncludePay === "boolean"
+      ? {
+          includePayDetails: optionsOrIncludePay,
+          includeSignatures: Boolean(data.includeSignatures),
+          includeCredit: Boolean(data.includeCredit),
+          paperSize: paperSizeFallback,
+        }
+      : {
+          includePayDetails:
+            optionsOrIncludePay.includePayDetails ?? data.includePayDetails ?? true,
+          includeSignatures:
+            optionsOrIncludePay.includeSignatures ?? Boolean(data.includeSignatures),
+          includeCredit:
+            optionsOrIncludePay.includeCredit ?? Boolean(data.includeCredit),
+          paperSize: optionsOrIncludePay.paperSize ?? paperSizeFallback,
+        };
+
+  const paperSize = options.paperSize || "a4";
+  const includePay = Boolean(options.includePayDetails);
+  const includeSigs = Boolean(options.includeSignatures);
+  const includeCredit = Boolean(options.includeCredit);
+
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -308,70 +383,88 @@ export function generateTimeCardPdf(
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 18;
+  const margin = 16;
   const contentWidth = pageWidth - margin * 2;
   let y = margin;
 
   const colors: [number, number, number] = [28, 25, 23]; // stone-900
   const subColor: [number, number, number] = [120, 113, 108]; // stone-500
   const accentColor: [number, number, number] = [16, 149, 106]; // emerald-600
-  const sym = CURRENCY_SYMBOLS[data.currency] || "$";
 
-  // Watermark / Brand Header
-  doc.setFontSize(8);
-  doc.setTextColor(170, 165, 160);
-  doc.setFont("helvetica", "normal");
-  doc.text("Generated by FreelanceCalc.app — Free Time Card Calculator", margin, y);
-  y += 7;
-
-  // Title
-  doc.setFontSize(22);
+  // Title (slightly reduced title size for cleaner hierarchy)
+  doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...colors);
-  doc.text("TIMESHEET / TIME CARD", margin, y + 2);
+  doc.text("TIME CARD / TIMESHEET", margin, y + 2);
 
-  // Meta Info Box (Right aligned)
+  // Meta Info Box (Right-aligned, displaying populated fields only)
+  // Give sufficient width (95mm) to prevent label / date collisions
   const metaRightX = pageWidth - margin;
-  const metaLabelX = metaRightX - 55;
-  let metaY = y - 4;
+  const metaBlockWidth = 95;
+  const metaLabelX = metaRightX - metaBlockWidth;
+  let metaY = y - 1;
 
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...subColor);
-  doc.text("Pay Period Start", metaLabelX, metaY);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...colors);
-  doc.text(formatDateReadable(data.payPeriodStartDate) || "—", metaRightX, metaY, { align: "right" });
-  metaY += 5;
+  doc.setFontSize(8.5);
 
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...subColor);
-  doc.text("Client / Project", metaLabelX, metaY);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...colors);
-  doc.text(data.clientName || "General", metaRightX, metaY, { align: "right" });
-  metaY += 5;
-
-  if (includePayDetails && data.hourlyRate > 0) {
+  const renderMetaRow = (label: string, value: string) => {
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...subColor);
-    doc.text("Hourly Rate", metaLabelX, metaY);
+    doc.text(label, metaLabelX, metaY);
+
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...colors);
-    doc.text(`${sym}${data.hourlyRate.toFixed(2)} / hr (${data.currency})`, metaRightX, metaY, { align: "right" });
-    metaY += 5;
+
+    const labelW = doc.getTextWidth(label);
+    const valW = doc.getTextWidth(value);
+
+    // If combined width exceeds available block width, wrap value to next line to avoid overlap
+    if (labelW + valW + 4 > metaBlockWidth) {
+      metaY += 4;
+      doc.text(value, metaRightX, metaY, { align: "right" });
+      metaY += 4.5;
+    } else {
+      doc.text(value, metaRightX, metaY, { align: "right" });
+      metaY += 4.5;
+    }
+  };
+
+  if (data.workerName) {
+    renderMetaRow("Worker", data.workerName);
   }
 
-  y = Math.max(y + 12, metaY + 5);
+  if (data.clientName) {
+    renderMetaRow("Client", data.clientName);
+  }
 
-  // Divider
+  if (data.projectName) {
+    renderMetaRow("Project", data.projectName);
+  }
+
+  // Full reporting period
+  if (data.payPeriodStartDate) {
+    const periodText = data.payPeriodEndDate
+      ? `${formatDateReadable(data.payPeriodStartDate)} – ${formatDateReadable(data.payPeriodEndDate)}`
+      : formatDateReadable(data.payPeriodStartDate);
+    renderMetaRow("Reporting Period", periodText);
+  }
+
+  // Rate label (distinguishing worker gross pay rate from client billing rate)
+  if (includePay && data.hourlyRate > 0) {
+    const rateLabel = data.rateType === "billing" ? "Billing Rate" : "Pay Rate";
+    renderMetaRow(rateLabel, `${formatMoney(data.hourlyRate, data.currency)} / hr`);
+  }
+
+  // Synchronize vertical position below header with tightened gap
+  y = Math.max(y + 8, metaY + 2);
+
+  // Subtle separator line
   doc.setDrawColor(225, 222, 218);
-  doc.setLineWidth(0.4);
+  doc.setLineWidth(0.3);
   doc.line(margin, y, pageWidth - margin, y);
-  y += 6;
+  y += 4.5;
 
-  // Table rows
-  const tableRows: string[][] = (data.sessions || []).map((session, idx) => {
+  // Table rows (without unnecessary row number column, giving task descriptions more room)
+  const tableRows: string[][] = (data.sessions || []).map((session) => {
     const elapsed = computeElapsedMinutes(session);
     const breakM = session.unpaidBreakMins || 0;
     const netM = Math.max(0, elapsed - breakM);
@@ -380,31 +473,29 @@ export function generateTimeCardPdf(
     const dateFormatted = formatDateReadable(session.date);
 
     return [
-      `#${idx + 1}`,
       weekday ? `${weekday}, ${dateFormatted}` : dateFormatted || "—",
       formatTime12h(session.startTime),
       formatTime12h(session.endTime) + (session.endsNextDay ? " (+1d)" : ""),
       breakM > 0 ? `${breakM}m` : "0m",
-      `${netHours} hrs`,
+      `${formatMinutes(netM)} (${netHours}h)`,
       session.comment || "—",
     ];
   });
 
-  const commentColWidth = contentWidth - (12 + 32 + 22 + 24 + 18 + 22);
+  const commentColWidth = contentWidth - (34 + 20 + 24 + 18 + 32);
 
   autoTable(doc, {
     startY: y,
     margin: { left: margin, right: margin },
-    head: [["#", "Date", "Start", "End", "Break", "Net Worked", "Description / Task"]],
+    head: [["Date", "Start", "End", "Break", "Worked Time", "Description / Task"]],
     body: tableRows,
     columnStyles: {
-      0: { cellWidth: 12, halign: "center" },
-      1: { cellWidth: 32, fontStyle: "bold" },
-      2: { cellWidth: 22, halign: "center" },
-      3: { cellWidth: 24, halign: "center" },
-      4: { cellWidth: 18, halign: "center" },
-      5: { cellWidth: 22, halign: "right", fontStyle: "bold" },
-      6: { cellWidth: commentColWidth, fontStyle: "normal" },
+      0: { cellWidth: 34, fontStyle: "bold" },
+      1: { cellWidth: 20, halign: "center" },
+      2: { cellWidth: 24, halign: "center" },
+      3: { cellWidth: 18, halign: "center" },
+      4: { cellWidth: 32, halign: "right", fontStyle: "bold" },
+      5: { cellWidth: commentColWidth, fontStyle: "normal" },
     },
     headStyles: {
       fillColor: colors,
@@ -425,122 +516,189 @@ export function generateTimeCardPdf(
     rowPageBreak: "avoid",
   });
 
-  const lastTable = (doc as any).lastAutoTable;
-  y = (lastTable ? lastTable.finalY : y) + 7;
+  const lastTable = (doc as unknown as { lastAutoTable?: { finalY: number } }).lastAutoTable;
+  y = (lastTable ? lastTable.finalY : y) + 5;
 
-  // Summary and Pay Section
-  if (y > pageHeight - 65) {
+  // Avoid awkwardly split totals block across page breaks
+  const totalsBlockHeight = includePay && data.hourlyRate > 0 ? 46 : 22;
+  if (y + totalsBlockHeight > pageHeight - margin - (includeSigs ? 35 : 10)) {
     doc.addPage();
     y = margin;
   }
 
-  const totalsBlockWidth = 80;
+  // Widen totals block to 115mm to guarantee no label/value overlap
+  const totalsBlockWidth = 115;
   const totalsLabelX = pageWidth - margin - totalsBlockWidth;
   const totalsValX = pageWidth - margin;
 
-  doc.setFontSize(8.5);
+  const renderTotalRow = (
+    label: string,
+    value: string,
+    options?: {
+      isBold?: boolean;
+      fontSize?: number;
+      labelColor?: [number, number, number];
+      valColor?: [number, number, number];
+    }
+  ) => {
+    const isBold = options?.isBold ?? false;
+    const fontSize = options?.fontSize ?? 8.5;
+    const labelColor = options?.labelColor ?? (isBold ? colors : subColor);
+    const valColor = options?.valColor ?? (isBold ? colors : colors);
+
+    doc.setFontSize(fontSize);
+    doc.setFont("helvetica", isBold ? "bold" : "normal");
+    doc.setTextColor(...labelColor);
+    doc.text(label, totalsLabelX, y);
+
+    doc.setTextColor(...valColor);
+    const labelW = doc.getTextWidth(label);
+    const valW = doc.getTextWidth(value);
+
+    // If combined width exceeds block width, wrap value to next line to prevent overlap
+    if (labelW + valW + 4 > totalsBlockWidth) {
+      y += 4;
+      doc.text(value, totalsValX, y, { align: "right" });
+      y += 4.5;
+    } else {
+      doc.text(value, totalsValX, y, { align: "right" });
+      y += 4.5;
+    }
+  };
 
   // Total Elapsed
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...subColor);
-  doc.text("Total Elapsed Time", totalsLabelX, y);
-  doc.setTextColor(...colors);
-  doc.text(`${preview.totalWorkedHours.toFixed(2)} hrs`, totalsValX, y, { align: "right" });
-  y += 5;
+  renderTotalRow(
+    "Total Elapsed Time",
+    `${formatMinutes(preview.totalElapsedMinutes)} (${preview.totalWorkedHours.toFixed(2)} hrs)`
+  );
 
-  // Total Breaks
-  doc.setTextColor(...subColor);
-  doc.text("Total Unpaid Breaks", totalsLabelX, y);
-  doc.setTextColor(220, 38, 38);
-  doc.text(`- ${preview.unpaidBreakHours.toFixed(2)} hrs`, totalsValX, y, { align: "right" });
-  y += 5;
+  // Total Unpaid Breaks (neutrally shown, not red and without minus sign)
+  renderTotalRow(
+    "Total Unpaid Breaks",
+    `${formatMinutes(preview.totalBreakMinutes)} (${preview.unpaidBreakHours.toFixed(2)} hrs)`
+  );
 
-  // Total Net Hours
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...colors);
-  doc.text("Total Net Worked Hours", totalsLabelX, y);
-  doc.setTextColor(...accentColor);
-  doc.text(`${preview.netWorkedHours.toFixed(2)} hrs (${formatMinutes(preview.netWorkedHours * 60)})`, totalsValX, y, { align: "right" });
-  y += 6;
+  // Total Net Worked Time (with decimal hours clearly labeled for billing)
+  renderTotalRow(
+    "Total Net Worked Time",
+    `${formatMinutes(preview.totalWorkedMinutes)} (${preview.netWorkedHours.toFixed(2)} hrs billed)`,
+    { isBold: true, valColor: accentColor }
+  );
 
-  if (includePayDetails && data.hourlyRate > 0) {
+  // Financial details (optional)
+  if (includePay && data.hourlyRate > 0) {
+    const isBilling = data.rateType === "billing";
+    const regularHours = preview.netWorkedHours - preview.overtimeApplied;
+    const regularLabel = isBilling
+      ? `Regular Billing (${regularHours.toFixed(2)} hrs)`
+      : `Regular Pay (${regularHours.toFixed(2)} hrs)`;
+    const overtimeLabel = isBilling
+      ? `Overtime Billing (${preview.overtimeApplied.toFixed(2)} hrs @ ${preview.overtimeMultiplier}x)`
+      : `Overtime Pay (${preview.overtimeApplied.toFixed(2)} hrs @ ${preview.overtimeMultiplier}x)`;
+    const totalPayLabel = isBilling
+      ? "Total Estimated Client Billing"
+      : "Total Estimated Gross Pay";
+
     doc.setDrawColor(220, 218, 214);
     doc.setLineWidth(0.3);
     doc.line(totalsLabelX, y, totalsValX, y);
-    y += 5;
+    y += 4.5;
 
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(...subColor);
-    doc.text(`Regular Pay (${(preview.netWorkedHours - preview.overtimeApplied).toFixed(2)} hrs)`, totalsLabelX, y);
-    doc.setTextColor(...colors);
-    doc.text(`${sym}${preview.grossPay.toFixed(2)}`, totalsValX, y, { align: "right" });
-    y += 5;
+    renderTotalRow(regularLabel, formatMoney(preview.grossPay, data.currency));
 
     if (preview.overtimeApplied > 0) {
-      doc.setTextColor(...subColor);
-      doc.text(`Overtime Pay (${preview.overtimeApplied.toFixed(2)} hrs @ ${preview.overtimeMultiplier}x)`, totalsLabelX, y);
-      doc.setTextColor(190, 80, 20);
-      doc.text(`+ ${sym}${preview.overtimePay.toFixed(2)}`, totalsValX, y, { align: "right" });
-      y += 5;
+      renderTotalRow(
+        overtimeLabel,
+        `+ ${formatMoney(preview.overtimePay, data.currency)}`,
+        { valColor: [190, 80, 20] }
+      );
     }
 
     doc.setDrawColor(...accentColor);
-    doc.setLineWidth(0.5);
+    doc.setLineWidth(0.4);
     doc.line(totalsLabelX, y, totalsValX, y);
-    y += 5;
+    y += 4.5;
 
-    doc.setFontSize(11);
+    renderTotalRow(
+      totalPayLabel,
+      formatMoney(preview.totalPay, data.currency),
+      { isBold: true, fontSize: 10, valColor: accentColor }
+    );
+
+    // Overtime rule and tax exclusion disclaimer (wrapped to avoid overflowing block)
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...subColor);
+    const otRule =
+      data.overtimeThreshold > 0 && data.overtimeMultiplier > 1
+        ? `Overtime: ${data.overtimeMultiplier}x after ${data.overtimeThreshold.toFixed(1)} hrs/period.`
+        : "Overtime: None / standard rate for all hours.";
+    const taxNote = isBilling
+      ? "Estimates exclude applicable sales taxes, client fees, and reimbursable expenses."
+      : "Estimates represent gross earnings and exclude taxes, withholdings, and deductions.";
+    const disclaimerLines = doc.splitTextToSize(`${otRule} ${taxNote}`, totalsBlockWidth);
+    disclaimerLines.forEach((line: string) => {
+      doc.text(line, totalsValX, y, { align: "right" });
+      y += 3.2;
+    });
+    y += 2;
+  }
+
+  // Signature Block (optional)
+  if (includeSigs) {
+    if (y + 30 > pageHeight - margin - 10) {
+      doc.addPage();
+      y = margin;
+    } else {
+      y += 7;
+    }
+
+    const sigColWidth = contentWidth / 2 - 10;
+    const sig1X = margin;
+    const sig2X = margin + contentWidth / 2 + 10;
+
+    doc.setFontSize(7.5);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(...colors);
-    doc.text("Total Estimated Gross Pay", totalsLabelX, y);
-    doc.setTextColor(...accentColor);
-    doc.text(`${sym}${preview.totalPay.toFixed(2)} ${data.currency}`, totalsValX, y, { align: "right" });
-    y += 8;
+    doc.setTextColor(...subColor);
+    doc.text("WORKER / CONTRACTOR SIGNATURE", sig1X, y);
+    doc.text("CLIENT / SUPERVISOR APPROVAL", sig2X, y);
+    y += 11;
+
+    doc.setDrawColor(180, 175, 170);
+    doc.setLineWidth(0.3);
+    doc.line(sig1X, y, sig1X + sigColWidth, y);
+    doc.line(sig2X, y, sig2X + sigColWidth, y);
+    y += 3.5;
+
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(130);
+    doc.text("Signature & Date", sig1X, y);
+    doc.text("Signature & Date", sig2X, y);
   }
 
-  // Signatures Section
-  if (y > pageHeight - 40) {
-    doc.addPage();
-    y = margin;
-  } else {
-    y += 10;
-  }
-
-  const sigColWidth = (contentWidth / 2) - 10;
-  const sig1X = margin;
-  const sig2X = margin + contentWidth / 2 + 10;
-
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...subColor);
-  doc.text("CONTRACTOR / EMPLOYEE SIGNATURE", sig1X, y);
-  doc.text("CLIENT / SUPERVISOR APPROVAL", sig2X, y);
-  y += 12;
-
-  doc.setDrawColor(180, 175, 170);
-  doc.setLineWidth(0.3);
-  doc.line(sig1X, y, sig1X + sigColWidth, y);
-  doc.line(sig2X, y, sig2X + sigColWidth, y);
-  y += 4;
-
-  doc.setFontSize(7.5);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(120);
-  doc.text("Signature & Date", sig1X, y);
-  doc.text("Signature & Date", sig2X, y);
-
-  // Footer page numbers
+  // Footer page numbering and optional credit (separate from page numbers)
   const pageCount = doc.getNumberOfPages();
+  const footerY = pageHeight - 8;
+
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
+
+    if (includeCredit) {
+      doc.setFontSize(7.5);
+      doc.setTextColor(160);
+      doc.setFont("helvetica", "normal");
+      doc.text("Created with FreelanceCalc.app", margin, footerY, { align: "left" });
+    }
+
     doc.setFontSize(7.5);
     doc.setTextColor(160);
     doc.setFont("helvetica", "italic");
     doc.text(
       `Timesheet — Page ${i} of ${pageCount}`,
-      pageWidth / 2,
-      pageHeight - 9,
-      { align: "center" }
+      pageWidth - margin,
+      footerY,
+      { align: "right" }
     );
   }
 
@@ -548,93 +706,196 @@ export function generateTimeCardPdf(
 }
 
 /**
- * Generate CSV string and trigger browser download.
+ * Protect text against spreadsheet formula injection and escape CSV special characters.
+ */
+export function sanitizeCsvField(val: string | number | boolean | null | undefined): string {
+  if (val === null || val === undefined) return "";
+  if (typeof val === "number") {
+    return isNaN(val) ? "" : String(val);
+  }
+  if (typeof val === "boolean") {
+    return val ? "true" : "false";
+  }
+
+  let str = String(val);
+
+  // Neutralize formula injection risk in Excel/Google Sheets/Calc
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+
+  // Standard CSV escaping if comma, double quotes, newline, or leading single quote
+  if (/[",\n\r]/.test(str) || str.startsWith("'")) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+export interface TimeCardCsvOptions {
+  includePayDetails?: boolean;
+  format?: "data_only" | "with_summary";
+}
+
+/**
+ * Generate CSV string.
+ * Supports two options:
+ * 1. "data_only" (default): one rectangular machine-readable table with consistent columns.
+ * 2. "with_summary": metadata header, sessions table, and labeled totals summary.
+ */
+export function generateTimeCardCsv(
+  data: TimeCardData,
+  preview: CalculatedTimeCardPreview,
+  optionsOrIncludePay: boolean | TimeCardCsvOptions = true
+): string {
+  const options: TimeCardCsvOptions =
+    typeof optionsOrIncludePay === "boolean"
+      ? {
+          includePayDetails: optionsOrIncludePay,
+          format: data.csvFormat || "data_only",
+        }
+      : {
+          includePayDetails:
+            optionsOrIncludePay.includePayDetails ?? data.includePayDetails ?? true,
+          format: optionsOrIncludePay.format ?? data.csvFormat ?? "data_only",
+        };
+
+  const includePay = Boolean(options.includePayDetails);
+  const format = options.format || "data_only";
+
+  const rows: string[][] = [];
+
+  // Summary header block when "with_summary" is chosen
+  if (format === "with_summary") {
+    rows.push(["TIMESHEET / TIME CARD SUMMARY"]);
+    if (data.workerName) rows.push(["Worker", data.workerName]);
+    if (data.clientName) rows.push(["Client", data.clientName]);
+    if (data.projectName) rows.push(["Project", data.projectName]);
+    rows.push(["Period Start", data.payPeriodStartDate || ""]);
+    if (data.payPeriodEndDate) rows.push(["Period End", data.payPeriodEndDate]);
+    if (includePay && data.hourlyRate > 0) {
+      const rateLabel = data.rateType === "billing" ? "Client Billing Rate" : "Worker Pay Rate";
+      rows.push([rateLabel, data.hourlyRate.toFixed(2)]);
+      rows.push(["Currency", data.currency]);
+      if (data.overtimeThreshold > 0 && data.overtimeMultiplier > 1) {
+        rows.push(["Overtime Threshold (hours)", String(data.overtimeThreshold)]);
+        rows.push(["Overtime Multiplier", `${data.overtimeMultiplier}x`]);
+      }
+    }
+    rows.push([]); // blank separator line
+  }
+
+  // Consistent rectangular column headers
+  const cols = [
+    "worker_name",
+    "client_name",
+    "project_name",
+    "period_start_date",
+    "period_end_date",
+    "session_number",
+    "start_date",
+    "end_date",
+    "start_time",
+    "end_time",
+    "overnight",
+    "unpaid_break_minutes",
+    "worked_minutes",
+    "decimal_hours",
+    "description",
+  ];
+
+  if (includePay) {
+    cols.push("currency", "rate_per_hour", "amount");
+  }
+
+  rows.push(cols);
+
+  // Session rows: repeated metadata for machine-readability, no invented per-session overtime
+  (data.sessions || []).forEach((session, idx) => {
+    const elapsed = computeElapsedMinutes(session);
+    const breakM = session.unpaidBreakMins || 0;
+    const netM = Math.max(0, elapsed - breakM);
+    const decimalHours = (netM / 60).toFixed(2);
+    const endDate = getSessionEndDate(session.date, session.endsNextDay);
+
+    const r = [
+      data.workerName || "",
+      data.clientName || "",
+      data.projectName || "",
+      data.payPeriodStartDate || "",
+      data.payPeriodEndDate || "",
+      String(idx + 1),
+      session.date || "",
+      endDate || "",
+      session.startTime || "",
+      session.endTime || "",
+      session.endsNextDay ? "true" : "false",
+      String(breakM),
+      String(netM),
+      decimalHours,
+      session.comment || "",
+    ];
+
+    if (includePay) {
+      const sessionAmount = ((netM / 60) * data.hourlyRate).toFixed(2);
+      r.push(data.currency, data.hourlyRate.toFixed(2), sessionAmount);
+    }
+
+    rows.push(r);
+  });
+
+  // Labeled totals block when "with_summary" is chosen
+  if (format === "with_summary") {
+    rows.push([]);
+    rows.push(["TOTALS SUMMARY"]);
+    rows.push(["Total Sessions", String((data.sessions || []).length)]);
+    rows.push(["Total Elapsed Minutes", String(preview.totalElapsedMinutes)]);
+    rows.push(["Total Elapsed Hours", preview.totalWorkedHours.toFixed(2)]);
+    rows.push(["Total Unpaid Break Minutes", String(preview.totalBreakMinutes)]);
+    rows.push(["Total Unpaid Break Hours", preview.unpaidBreakHours.toFixed(2)]);
+    rows.push(["Total Net Worked Minutes", String(preview.totalWorkedMinutes)]);
+    rows.push(["Total Net Worked Hours", preview.netWorkedHours.toFixed(2)]);
+
+    if (includePay && data.hourlyRate > 0) {
+      const regularHours = (preview.netWorkedHours - preview.overtimeApplied).toFixed(2);
+      rows.push(["Regular Hours", regularHours]);
+      rows.push(["Regular Amount", preview.grossPay.toFixed(2)]);
+      if (preview.overtimeApplied > 0) {
+        rows.push(["Overtime Hours", preview.overtimeApplied.toFixed(2)]);
+        rows.push(["Overtime Multiplier", `${preview.overtimeMultiplier}x`]);
+        rows.push(["Overtime Amount", preview.overtimePay.toFixed(2)]);
+      }
+      const totalLabel =
+        data.rateType === "billing"
+          ? "Total Estimated Client Billing"
+          : "Total Estimated Gross Pay";
+      rows.push([totalLabel, preview.totalPay.toFixed(2)]);
+      rows.push(["Currency", data.currency]);
+    }
+  }
+
+  // Prepend UTF-8 BOM to ensure spreadsheet programs open UTF-8 characters cleanly
+  return "\uFEFF" + rows.map((r) => r.map(sanitizeCsvField).join(",")).join("\r\n");
+}
+
+/**
+ * Generate CSV and trigger browser download.
  */
 export function downloadTimeCardCsv(
   data: TimeCardData,
   preview: CalculatedTimeCardPreview,
-  includePayDetails: boolean = true
+  optionsOrIncludePay: boolean | TimeCardCsvOptions = true
 ): void {
-  const escapeCsv = (val: string | number) => {
-    const str = String(val ?? "");
-    if (/[",\n]/.test(str)) {
-      return `"${str.replace(/"/g, '""')}"`;
-    }
-    return str;
-  };
-
-  const rows: string[][] = [];
-
-  // Header meta
-  rows.push(["TIMESHEET / TIME CARD"]);
-  rows.push(["Client / Project", data.clientName || "General"]);
-  rows.push(["Pay Period Start", data.payPeriodStartDate || ""]);
-  rows.push(["Currency", data.currency]);
-  if (includePayDetails) {
-    rows.push(["Hourly Rate", String(data.hourlyRate)]);
-  }
-  rows.push([]); // blank line
-
-  // Column Headers
-  const cols = [
-    "Date",
-    "Day",
-    "Start Time",
-    "End Time",
-    "Overnight",
-    "Unpaid Break (mins)",
-    "Net Worked Hours",
-    "Description",
-  ];
-  if (includePayDetails) {
-    cols.push("Hourly Rate", "Estimated Pay");
-  }
-  rows.push(cols);
-
-  // Session rows
-  (data.sessions || []).forEach((session) => {
-    const elapsed = computeElapsedMinutes(session);
-    const breakM = session.unpaidBreakMins || 0;
-    const netM = Math.max(0, elapsed - breakM);
-    const netHours = (netM / 60).toFixed(2);
-    const pay = (Number(netHours) * data.hourlyRate).toFixed(2);
-
-    const r = [
-      session.date,
-      getWeekday(session.date),
-      session.startTime,
-      session.endTime,
-      session.endsNextDay ? "Yes" : "No",
-      String(breakM),
-      netHours,
-      session.comment || "",
-    ];
-    if (includePayDetails) {
-      r.push(String(data.hourlyRate), pay);
-    }
-    rows.push(r);
-  });
-
-  // Totals rows
-  rows.push([]);
-  rows.push(["SUMMARY"]);
-  rows.push(["Total Elapsed Hours", preview.totalWorkedHours.toFixed(2)]);
-  rows.push(["Total Unpaid Breaks", preview.unpaidBreakHours.toFixed(2)]);
-  rows.push(["Total Net Worked Hours", preview.netWorkedHours.toFixed(2)]);
-
-  if (includePayDetails && data.hourlyRate > 0) {
-    rows.push(["Regular Pay", preview.grossPay.toFixed(2)]);
-    if (preview.overtimeApplied > 0) {
-      rows.push(["Overtime Pay", preview.overtimePay.toFixed(2)]);
-    }
-    rows.push(["Total Estimated Gross Pay", preview.totalPay.toFixed(2)]);
-  }
-
-  const csvContent = rows.map((r) => r.map(escapeCsv).join(",")).join("\r\n");
+  const csvContent = generateTimeCardCsv(data, preview, optionsOrIncludePay);
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  const filename = `timesheet-${(data.clientName || "freelancer").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${data.payPeriodStartDate || "period"}.csv`;
+
+  const baseName =
+    [data.workerName, data.clientName, data.projectName].filter(Boolean).join("-") ||
+    "timesheet";
+  const safeName = baseName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const filename = `timesheet-${safeName || "export"}-${data.payPeriodStartDate || "period"}.csv`;
+
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);
