@@ -15,28 +15,28 @@ export default function NotFound() {
 
       <div className="mt-8 grid gap-3 text-left sm:grid-cols-2">
         <Link
-          href="/upwork-fee-calculator"
+          href="/upwork-fee-calculator/"
           className="rounded-lg border border-stone-200 bg-white p-3.5 hover:border-stone-400 hover:shadow-xs transition-all"
         >
           <p className="text-xs font-semibold text-stone-900">Upwork Fee Calculator →</p>
           <p className="text-[11px] text-stone-500 mt-0.5">Calculate net take-home from 0%–15% contracts</p>
         </Link>
         <Link
-          href="/fiverr-fee-calculator"
+          href="/fiverr-fee-calculator/"
           className="rounded-lg border border-stone-200 bg-white p-3.5 hover:border-stone-400 hover:shadow-xs transition-all"
         >
           <p className="text-xs font-semibold text-stone-900">Fiverr Fee Calculator →</p>
           <p className="text-[11px] text-stone-500 mt-0.5">Calculate net payout after 20% commission</p>
         </Link>
         <Link
-          href="/usd-to-pkr-calculator"
+          href="/usd-to-pkr-calculator/"
           className="rounded-lg border border-stone-200 bg-white p-3.5 hover:border-stone-400 hover:shadow-xs transition-all"
         >
           <p className="text-xs font-semibold text-stone-900">Currency Converter →</p>
           <p className="text-[11px] text-stone-500 mt-0.5">Convert USD at real bank exchange rates</p>
         </Link>
         <Link
-          href="/guides"
+          href="/guides/"
           className="rounded-lg border border-stone-200 bg-white p-3.5 hover:border-stone-400 hover:shadow-xs transition-all"
         >
           <p className="text-xs font-semibold text-stone-900">Freelancer Guides →</p>

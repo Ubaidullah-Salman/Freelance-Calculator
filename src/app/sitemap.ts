@@ -56,6 +56,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
+      url: `${SITE_URL}/guides/freelance-invoice-template/`,
+      lastModified: contentUpdated,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/guides/how-to-track-freelance-hours/`,
+      lastModified: contentUpdated,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/guides/upwork-fees-explained/`,
       lastModified: contentUpdated,
       changeFrequency: "weekly",

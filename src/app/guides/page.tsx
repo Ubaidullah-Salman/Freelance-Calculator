@@ -4,9 +4,9 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Freelancer Guides — Fees, Tax & Currency Explained",
+  title: "Freelancer Guides — Invoices, Time Tracking, Fees & Tax",
   description:
-    "Comprehensive guides for freelancers on Upwork fees, Fiverr commissions, bank currency conversion, and freelancer taxes.",
+    "Free guides for freelancers: create professional invoices, track work hours, understand Upwork & Fiverr fees, convert currency, and calculate freelancer taxes.",
   alternates: {
     canonical: `${SITE_URL}/guides/`,
     languages: {
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Freelancer Guides — Fees, Tax & Currency Explained",
-    description: "Comprehensive guides for freelancers on Upwork fees, Fiverr commissions, bank currency conversion, and freelancer taxes.",
+    title: "Freelancer Guides — Invoices, Time Tracking, Fees & Tax",
+    description: "Free guides for freelancers: create professional invoices, track work hours, understand Upwork & Fiverr fees, convert currency, and calculate freelancer taxes.",
     url: `${SITE_URL}/guides/`,
     type: "website",
   },
@@ -24,7 +24,23 @@ export const metadata: Metadata = {
 
 const GUIDES = [
   {
-    href: "/guides/upwork-fees-explained",
+    href: "/guides/freelance-invoice-template/",
+    badge: "Invoicing",
+    badgeColor: "bg-violet-50 text-violet-800 border-violet-200",
+    title: "Freelance Invoice Template — Free PDF Generator (2026)",
+    desc: "What every professional freelance invoice must include, how to number them, handling partial payments, and exporting clean PDFs — all free, no sign-up.",
+    readTime: "9 min read",
+  },
+  {
+    href: "/guides/how-to-track-freelance-hours/",
+    badge: "Time Tracking",
+    badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+    title: "How to Track Freelance Hours: Methods, Tools & Best Practices",
+    desc: "Billable vs non-billable hours, decimal hour conversion, handling breaks and overtime, and how to send a professional timesheet with your invoice.",
+    readTime: "8 min read",
+  },
+  {
+    href: "/guides/upwork-fees-explained/",
     badge: "Upwork",
     badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
     title: "How Much Does Upwork Take? Complete Fee Guide 2026",
@@ -32,15 +48,15 @@ const GUIDES = [
     readTime: "7 min read",
   },
   {
-    href: "/guides/fiverr-fees-explained",
+    href: "/guides/fiverr-fees-explained/",
     badge: "Fiverr",
-    badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+    badgeColor: "bg-rose-50 text-rose-800 border-rose-200",
     title: "Fiverr Fees Explained: What Fiverr Takes in 2026",
     desc: "Fiverr charges a flat 20% on all earnings including tips. Learn exactly what you keep from gig orders, extras, and custom offers — with pricing formulas.",
     readTime: "6 min read",
   },
   {
-    href: "/guides/freelancer-currency-conversion",
+    href: "/guides/freelancer-currency-conversion/",
     badge: "Currency",
     badgeColor: "bg-amber-50 text-amber-800 border-amber-200",
     title: "Freelancer Currency Conversion: Why You Get Less Than Google's Rate",
@@ -48,7 +64,7 @@ const GUIDES = [
     readTime: "8 min read",
   },
   {
-    href: "/pakistan-freelancer-tax",
+    href: "/pakistan-freelancer-tax/",
     badge: "Tax",
     badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
     title: "Pakistan Freelancer Tax: FBR Section 154A Withholding Guide",
@@ -69,7 +85,7 @@ export default function GuidesIndex() {
       "@type": "Article",
       name: g.title,
       description: g.desc,
-      url: `${SITE_URL}${g.href}/`,
+      url: `${SITE_URL}${g.href}`,
     })),
   };
 
