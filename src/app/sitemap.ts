@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const contentUpdated = new Date("2026-11-08T00:00:00Z");
-  const legalUpdated = new Date("2026-10-24T00:00:00Z");
+  const contentUpdated = new Date("2026-11-26T00:00:00Z");
+  const legalUpdated = new Date("2026-11-26T00:00:00Z");
 
   return [
     {
@@ -12,6 +12,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: contentUpdated,
       changeFrequency: "weekly",
       priority: 1.0,
+    },
+    {
+      url: `${SITE_URL}/invoice-generator/`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${SITE_URL}/time-card-calculator/`,
+      lastModified: contentUpdated,
+      changeFrequency: "weekly",
+      priority: 0.95,
     },
     {
       url: `${SITE_URL}/upwork-fee-calculator/`,
@@ -33,18 +45,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/pakistan-freelancer-tax/`,
-      lastModified: contentUpdated,
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${SITE_URL}/time-card-calculator/`,
-      lastModified: contentUpdated,
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${SITE_URL}/invoice-generator/`,
       lastModified: contentUpdated,
       changeFrequency: "weekly",
       priority: 0.85,
