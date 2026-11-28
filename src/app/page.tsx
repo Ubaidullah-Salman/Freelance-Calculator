@@ -368,7 +368,7 @@ export default function HomePage() {
 
       {/* AdSense Leaderboard */}
       <section className="mb-8" aria-label="Advertisement">
-        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <div className="text-center text-xs text-stone-500 mb-1">Advertisement</div>
         <AdSlotLeaderboard slotName="1234567890" />
       </section>
 

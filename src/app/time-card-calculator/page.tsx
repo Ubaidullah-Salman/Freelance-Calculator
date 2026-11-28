@@ -14,12 +14,22 @@ const TimeCardProvider = dynamic(
 
 const TimeCardEditorWrapper = dynamic(
   () => import("@/components/time-card/TimeCardPageClient").then((m) => m.TimeCardEditorWrapper),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[560px] rounded-xl border border-stone-200 bg-white p-6 animate-pulse" aria-hidden="true" />
+    ),
+  }
 );
 
 const TimeCardPreviewWrapper = dynamic(
   () => import("@/components/time-card/TimeCardPageClient").then((m) => m.TimeCardPreviewWrapper),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[560px] rounded-xl border border-stone-200 bg-white p-6 animate-pulse" aria-hidden="true" />
+    ),
+  }
 );
 
 export default function TimeCardCalculatorPage() {
@@ -384,7 +394,7 @@ export default function TimeCardCalculatorPage() {
 
       {/* AdSense Leaderboard */}
       <section className="mb-8" aria-label="Advertisement">
-        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <div className="text-center text-xs text-stone-500 mb-1">Advertisement</div>
         <AdSlotLeaderboard slotName="1234567890" />
       </section>
 

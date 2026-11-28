@@ -65,9 +65,9 @@ export default function ResultCard({
       {/* Aligned Breakdown */}
       <div>
         {title && (
-          <h3 className="mb-2.5 text-xs font-medium uppercase tracking-wider text-stone-400">
+          <h2 className="mb-2.5 text-xs font-medium uppercase tracking-wider text-stone-600">
             {title}
-          </h3>
+          </h2>
         )}
 
         <div className="space-y-2 text-sm">

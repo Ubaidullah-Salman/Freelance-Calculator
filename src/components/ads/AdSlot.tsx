@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface AdSlotProps {
   slotName: string;
@@ -18,8 +18,6 @@ export function AdSlot({
   style,
 }: AdSlotProps) {
   const adRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (!adRef.current) return;
@@ -40,20 +38,17 @@ export function AdSlot({
     container.appendChild(ins);
 
     try {
-      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      (window as any).adsbygoogle.push({});
-      setIsLoaded(true);
-    } catch (e) {
-      setHasError(true);
-      console.warn("[AdSlot] Failed to push ad:", e);
+      const adsbygoogle = (window as unknown as { adsbygoogle?: unknown[] }).adsbygoogle || [];
+      (window as unknown as { adsbygoogle?: unknown[] }).adsbygoogle = adsbygoogle;
+      adsbygoogle.push({});
+    } catch {
+      // AdSense script not loaded or blocked; container height stays reserved to prevent CLS
     }
 
     return () => {
       container.innerHTML = "";
     };
   }, [slotName, format]);
-
-  if (hasError) return null;
 
   return (
     <div

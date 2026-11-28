@@ -41,7 +41,7 @@ export default function Footer() {
             <p className="mt-1.5 max-w-xs text-[11px] text-stone-500 leading-relaxed">
               Transparent, private fee and tax calculators for remote freelancers and international contractors.
             </p>
-            <div className="mt-3 flex items-center gap-3 text-stone-400">
+            <div className="mt-3 flex items-center gap-3 text-stone-500">
               <a
                 href="https://x.com/freelancecalc"
                 target="_blank"
@@ -135,7 +135,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-stone-100 pt-5 text-center sm:text-left text-[11px] leading-relaxed text-stone-400">
+        <div className="mt-8 border-t border-stone-100 pt-5 text-center sm:text-left text-[11px] leading-relaxed text-stone-600">
           Disclaimer: FreelanceCalc provides independent estimates for planning purposes only. Not affiliated with, endorsed by, or sponsored by Upwork, Fiverr, or FBR Pakistan. Official rates should always be verified on each platform.
         </div>
       </div>

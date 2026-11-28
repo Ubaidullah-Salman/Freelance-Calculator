@@ -91,7 +91,7 @@ export default function FiverrPage() {
 
       {/* AdSense Rectangle */}
       <section className="my-8" aria-label="Advertisement">
-        <div className="text-center text-xs text-stone-400 mb-1">Advertisement</div>
+        <div className="text-center text-xs text-stone-500 mb-1">Advertisement</div>
         <AdSlotRectangle slotName="0987654321" />
       </section>
 

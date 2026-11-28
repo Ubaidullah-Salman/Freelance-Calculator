@@ -145,7 +145,7 @@ export default function GuidesIndex() {
                   {g.title}
                 </h2>
                 <p className="mt-2 text-xs text-stone-500 leading-relaxed">{g.desc}</p>
-                <p className="mt-3 text-[11px] text-stone-400">{g.readTime}</p>
+                <p className="mt-3 text-[11px] text-stone-500">{g.readTime}</p>
               </div>
               <span className="text-stone-300 group-hover:text-emerald-500 transition-colors text-lg mt-0.5">→</span>
             </div>
