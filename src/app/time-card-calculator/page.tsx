@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { AdSlotLeaderboard } from "@/components/ads/AdSlot";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
 import { FeatureCard } from "@/components/time-card/FeatureCard";
+import RelatedLinks from "@/components/ui/RelatedLinks";
 
 
 const TimeCardProvider = dynamic(
@@ -315,7 +316,7 @@ export default function TimeCardCalculatorPage() {
               <ol className="list-decimal list-inside text-xs text-stone-600 space-y-1 leading-relaxed">
                 <li>Select the <strong>start date</strong> of the shift.</li>
                 <li>Enter start time and end time.</li>
-                <li>Check the <strong>"Ends next day"</strong> box.</li>
+                <li>Check the <strong>&quot;Ends next day&quot;</strong> box.</li>
               </ol>
             </div>
             <div className="p-4 rounded-lg bg-indigo-50/50 border border-indigo-100 space-y-2">
@@ -396,11 +397,32 @@ export default function TimeCardCalculatorPage() {
           <div>
             <h3 className="text-sm font-semibold text-amber-800">Shared Device Warning</h3>
             <p className="mt-1 text-xs text-amber-700 leading-relaxed">
-              Timesheet drafts are stored in this browser's local storage. Anyone using this device can access saved timesheets. Clear your timesheet when finished on shared computers, or export a JSON backup for safekeeping.
+              Timesheet drafts are stored in this browser&apos;s local storage. Anyone using this device can access saved timesheets. Clear your timesheet when finished on shared computers, or export a JSON backup for safekeeping.
             </p>
           </div>
         </div>
       </section>
+
+      <RelatedLinks
+        title="Related Guides & Tools"
+        links={[
+          {
+            href: "/guides/how-to-track-freelance-hours/",
+            label: "How to Track Freelance Hours",
+            description: "Billable hours, decimal conversion, and timesheet tips.",
+          },
+          {
+            href: "/invoice-generator/",
+            label: "Invoice Generator",
+            description: "Turn your tracked hours into a professional PDF invoice.",
+          },
+          {
+            href: "/upwork-fee-calculator/",
+            label: "Upwork Fee Calculator",
+            description: "Calculate net take-home pay after platform fees.",
+          },
+        ]}
+      />
     </main>
   );
 }

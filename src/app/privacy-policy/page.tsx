@@ -4,7 +4,7 @@ import Link from "next/link";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy & Data Protection — FreelanceCalc",
+  title: "Privacy Policy & Data Protection",
   description:
     "Privacy policy for FreelanceCalc. Learn about our client-side privacy guarantee, data protection, and cookie disclosures.",
   alternates: {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Privacy Policy & Data Protection — FreelanceCalc",
+    title: "Privacy Policy & Data Protection",
     description: "Privacy policy for FreelanceCalc. Learn about our client-side privacy guarantee, data protection, and cookie disclosures.",
     url: `${SITE_URL}/privacy-policy/`,
     type: "website",
@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage() {
       <div className="space-y-6 text-sm leading-relaxed text-stone-700">
         <section>
           <p>
-            At <strong>FreelanceCalc</strong> (accessible from <a href="https://www.freelancecalc.app" className="text-emerald-700 underline">https://www.freelancecalc.app</a>), the privacy of our visitors is of paramount importance to us. This Privacy Policy document outlines the types of information that is collected and recorded by FreelanceCalc and how we use it.
+            At <strong>FreelanceCalc</strong> (accessible from <a href="https://www.freelancecalc.app/" className="text-emerald-700 underline">https://www.freelancecalc.app/</a>), the privacy of our visitors is of paramount importance to us. This Privacy Policy document outlines the types of information that is collected and recorded by FreelanceCalc and how we use it.
           </p>
         </section>
 

@@ -10,10 +10,12 @@ const TOOL_LINKS = [
 ];
 
 const GUIDE_LINKS = [
-  { href: "/guides", label: "All Guides" },
-  { href: "/guides/upwork-fees-explained", label: "Upwork Fee Guide" },
-  { href: "/guides/fiverr-fees-explained", label: "Fiverr Fees Explained" },
-  { href: "/guides/freelancer-currency-conversion", label: "Currency Conversion" },
+  { href: "/guides/", label: "All Guides" },
+  { href: "/guides/freelance-invoice-template/", label: "Invoice Template Guide" },
+  { href: "/guides/how-to-track-freelance-hours/", label: "Track Freelance Hours" },
+  { href: "/guides/upwork-fees-explained/", label: "Upwork Fee Guide" },
+  { href: "/guides/fiverr-fees-explained/", label: "Fiverr Fees Explained" },
+  { href: "/guides/freelancer-currency-conversion/", label: "Currency Conversion" },
 ];
 
 const LEGAL_LINKS = [

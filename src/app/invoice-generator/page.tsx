@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { AdSlotLeaderboard } from "@/components/ads/AdSlot";
 import WebApplicationSchema from "@/components/seo/WebApplicationSchema";
+import RelatedLinks from "@/components/ui/RelatedLinks";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.freelancecalc.app";
 
@@ -188,11 +189,32 @@ export default function InvoiceGeneratorPage() {
           <div>
             <h3 className="text-sm font-semibold text-amber-800">Shared Device Warning</h3>
             <p className="mt-1 text-xs text-amber-700 leading-relaxed">
-              Invoice drafts are stored in this browser's local storage. Anyone using this device can access saved invoices. Clear your invoice when finished on shared computers, or export a JSON backup for safekeeping.
+              Invoice drafts are stored in this browser&apos;s local storage. Anyone using this device can access saved invoices. Clear your invoice when finished on shared computers, or export a JSON backup for safekeeping.
             </p>
           </div>
         </div>
       </section>
+
+      <RelatedLinks
+        title="Related Guides & Tools"
+        links={[
+          {
+            href: "/guides/freelance-invoice-template/",
+            label: "Freelance Invoice Template Guide",
+            description: "What to include, invoice numbering, and payment terms.",
+          },
+          {
+            href: "/time-card-calculator/",
+            label: "Time Card Calculator",
+            description: "Track billable hours and export PDF/CSV timesheets.",
+          },
+          {
+            href: "/upwork-fee-calculator/",
+            label: "Upwork Fee Calculator",
+            description: "Calculate exact take-home pay after platform fees.",
+          },
+        ]}
+      />
     </main>
   );
 }
